@@ -85,8 +85,8 @@ exfrag<-function(rada,nfrg,iln,colmet,colfrg){ chast<-rada[1,];
    return(chast)
 }
 # read experimental data
- fname="outin.csv"
- fn<-file.path(fname);  fn1<-paste(fn,"_c",sep=""); write("",fn1)
+run_midcor<-function(inputFileName){
+ fn<-file.path(inputFileName);  fn1<-paste(fn,"_c",sep=""); write("",fn1)
       rada<-read.table(fn, sep=",");
   for(i in 1:length(rada)) {
   if(grepl("isotop",rada[1,i])) {newcol=as.character(rada[,i])} # column of signal intensity
@@ -115,4 +115,5 @@ exfrag<-function(rada,nfrg,iln,colmet,colfrg){ chast<-rada[1,];
  iln=data[[3]];}
  rdcor=cbind(rada,newcol)
      write.table(rdcor,"aaaaa.csv",sep=";",append=TRUE,col.names=FALSE, row.names = F); 
+}
 
