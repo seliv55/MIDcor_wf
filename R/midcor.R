@@ -92,18 +92,19 @@ run_midcor<-function(inputFileName){
   if(grepl("isotop",rada[1,i])) {newcol=as.character(rada[,i])} # column of signal intensity
   if(grepl("Metab",rada[1,i])) {colmet=i}
   if(grepl("atomic pos",rada[1,i])) {colfrg=i}  }
-   iln=2; a=findfrg(rada,iln,colmet,colfrg);
-     chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]];
+   iln=2;
 #    i=iln; k=i; l=1; chast<-rada[1,]
 #  metab=rada[i,colmet]; fra=rada[i,colfrg]; fra1=fra;
 #  while(metab==rada[i,colmet]){ i=i+1;
 #     if(fra==rada[i,colfrg]) {k=k+1; chast=rbind(chast,rada[i,])}
 #       else{l=l+1; fra1[l]=rada[i,colfrg]} }
-  if(k<(i-2)) exfrag(rada,l,iln,colmet,colfrg)
    
    Mtb=levels(rada[,colmet]); Mtb=Mtb[-length(Mtb)];
    for(ii in Mtb){
  write(as.character(paste("\n----",ii," ---\n")),fn1,append=TRUE)
+    a=findfrg(rada,iln,colmet,colfrg);
+     chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]];
+  if(k<(i-2)) exfrag(rada,l,iln,colmet,colfrg)
   data=convert(rada,iln); #datacont=c("id","mm","i","nmet","nC","nfrg")
   res=correct(data)
  nstrok=length(res[,1]);
