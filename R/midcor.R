@@ -116,6 +116,6 @@ run_midcor<-function(inputFileName, output){
         iln=data[[3]];
     }
     rdcor=cbind(rada,newcol)
-     write.table(rdcor,output,sep=";",append=TRUE,col.names=FALSE, row.names = F);
+     write.table(rdcor,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
 }
 
