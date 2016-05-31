@@ -91,32 +91,31 @@ run_midcor<-function(inputFileName, output){
   write("",fn1);
   rada<-read.table(fn, sep=",");
   for(i in 1:length(rada)) {
-  if(grepl("isotop",rada[1,i])) {newcol=as.character(rada[,i])} # column of signal intensity
-  if(grepl("Metab",rada[1,i])) {colmet=i}
-  if(grepl("atomic pos",rada[1,i])) {colfrg=i}  }
+        if(grepl("isotop",rada[1,i])) {newcol=as.character(rada[,i])} # column of signal intensity
+        if(grepl("Metab",rada[1,i])) {colmet=i}
+        if(grepl("atomic pos",rada[1,i])) {colfrg=i}  
+  }
    iln=2;
-#    i=iln; k=i; l=1; chast<-rada[1,]
-#  metab=rada[i,colmet]; fra=rada[i,colfrg]; fra1=fra;
-#  while(metab==rada[i,colmet]){ i=i+1;
-#     if(fra==rada[i,colfrg]) {k=k+1; chast=rbind(chast,rada[i,])}
-#       else{l=l+1; fra1[l]=rada[i,colfrg]} }
+        a=findfrg(rada,iln,colmet,colfrg);
+        chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]];
+        if(k<(i-2)) exfrag(rada,l,iln,colmet,colfrg)
    
    Mtb=levels(rada[,colmet]); Mtb=Mtb[-length(Mtb)];
    for(ii in Mtb){
- write(as.character(paste("\n----",ii," ---\n")),fn1,append=TRUE)
-    a=findfrg(rada,iln,colmet,colfrg);
-     chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]];
-  if(k<(i-2)) exfrag(rada,l,iln,colmet,colfrg)
-  data=convert(rada,iln); #datacont=c("id","mm","i","nmet","nC","nfrg")
-  res=correct(data)
- nstrok=length(res[,1]);
-  i=iln
-   for(j in 1:nstrok){
-   while(newcol[i]!="m0") i=i+1;
-   for(k in 1:(data[[6]]+1)) {newcol[i]=as.character(res[j,k+1]); i=i+1;}
-   }
- iln=data[[3]];}
- rdcor=cbind(rada,newcol)
+        write(as.character(paste("\n----",ii," ---\n")),fn1,append=TRUE);
+        data=convert(rada,iln); #datacont=c("id","mm","i","nmet","nC","nfrg")
+        res=correct(data)
+        nstrok=length(res[,1]);
+        i=iln
+        for(j in 1:nstrok){
+                while(newcol[i]!="m0") i=i+1;
+                        for(k in 1:(data[[6]]+1)) {
+                                newcol[i]=as.character(res[j,k+1]); i=i+1;
+                        }
+        }
+        iln=data[[3]];
+    }
+    rdcor=cbind(rada,newcol)
      write.table(rdcor,output,sep=";",append=TRUE,col.names=FALSE, row.names = F); 
 }
 
