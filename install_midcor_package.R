@@ -23,3 +23,11 @@ sudo docker images
 sudo docker run --name=midcor-d -i -t midcor:0.1 -i outin.csv -o my_out.csv 
 
 sudo docker run -i -t -v $PWD:/data midcor:0.1 -i /data/outin.csv -o /data/my_out.csv
+
+vs@vit:~/phenomen/tmp$ sudo docker run -i -t -v /home/vs/phenomen/isodyn:/data isodyn:0.1 /data
+
+
+vs@vit:~/phenomen/tmp$ sudo docker ps
+ 
+vs@vit:~/phenomen/tmp$ sudo docker stop 05db1e579964
+
