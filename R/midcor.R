@@ -68,20 +68,20 @@ correct<-function(data,fn1,mdcor="con"){
 }
 
 findfrg<-function(rada,iln,colmet,colfrg){
- i=iln; k=i; l=1; chast<-rada[1,]
+ i=iln; k=i; l=1; chast<-rada[1,]; len=length(rada[,1]);
   metab=rada[i,colmet]; fra=rada[i,colfrg]; fra1=fra;
-  while(metab==rada[i,colmet]){ i=i+1;
+  while(metab==rada[i,colmet]){
      if(fra==rada[i,colfrg]) {k=k+1; chast=rbind(chast,rada[i,])}
-       else{ for(ii in 1:l) if(rada[i,colfrg]==fra1[ii]) {break}
-       else{l=l+1; fra1[l]=rada[i,colfrg]}} }
+       else{ iii=0; for(ii in 1:l) {if(rada[i,colfrg] != fra1[ii]) {iii=iii+1}}
+              if(iii==l){l=l+1; fra1[l]=rada[i,colfrg]}}
+                           if(i==len){break;};  i=i+1; }
    return(list(chast,fra1,i,k)) }
 
 exfrag<-function(rada,nfrg,iln,colmet,colfrg){ chast<-rada[1,];
- for(ll in 2:nfrg){
-   i=iln; chast[ll]<-rada[1,];
+   i=iln; chast<-rada[1,];
    while(metab==rada[i,colmet]){ i=i+1;
-     if(fra1[ll]==rada[i,colfrg]) chast[ll]=rbind(chast[ll],rada[i,])
-  }}
+     if(fra1[nfrg]==rada[i,colfrg]) chast=rbind(chast,rada[i,])
+  }
    return(chast)
 }
 # read experimental data
@@ -96,24 +96,27 @@ run_midcor<-function(inputFileName, output){
         if(grepl("atomic pos",rada[1,i])) {colfrg=i}
   }
    iln=2;
-        a=findfrg(rada,iln,colmet,colfrg);
-        chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]];
-        if(k<(i-2)) exfrag(rada,l,iln,colmet,colfrg)
 
-   Mtb=levels(rada[,colmet]); Mtb=Mtb[-length(Mtb)];
-   for(ii in Mtb){
-        write(as.character(paste("\n----",ii," ---\n")),fn1,append=TRUE);
-        data=convert(rada,iln); #datacont=c("id","mm","i","nmet","nC","nfrg")
+   Mtb=levels(rada[,colmet]); numet=length(Mtb)-1;
+   for(ii in 1:numet){
+        write(as.character(paste("\n----",Mtb[ii]," ---\n")),fn1,append=TRUE);
+        a=findfrg(rada,iln,colmet,colfrg);
+        chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]]; lnfrg=length(fra1);
+#      for(frcyc in 1:lnfrg){
+#        if(frcyc>1) chast=exfrag(rada,frcyc,iln,colmet,colfrg);
+        
+        data=convert(chast,2); #datacont=c("id","mm","i","nmet","nC","nfrg")
         res=correct(data,fn1)
         nstrok=length(res[,1]);
-        i=iln
+        i=iln;
         for(j in 1:nstrok){
-                while(newcol[i]!="m0") i=i+1;
+                while(newcol[i]!="m0") {i=i+1;}
                         for(k in 1:(data[[6]]+1)) {
                                 newcol[i]=as.character(res[j,k+1]); i=i+1;
                         }
         }
-        iln=data[[3]];
+        iln=iln+data[[3]]-2;
+#        }
     }
     rdcor=cbind(rada,newcol)
      write.table(rdcor,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
