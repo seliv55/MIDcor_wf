@@ -77,11 +77,11 @@ findfrg<-function(rada,iln,colmet,colfrg){
                            if(i==len){break;};  i=i+1; }
    return(list(chast,fra1,i,k)) }
 
-exfrag<-function(rada,nfrg,iln,colmet,colfrg){ chast<-rada[1,];
-   i=iln; chast<-rada[1,];
-   while(metab==rada[i,colmet]){ i=i+1;
+exfrag<-function(rada,metab,iln,colmet,colfrg){ chast<-rada[1,];
+   i=iln; chast<-rada[1,]; len=length(rada[,1]);
+   while(i<=len) {if(metab==rada[i,colmet]){ i=i+1;
      if(fra1[nfrg]==rada[i,colfrg]) chast=rbind(chast,rada[i,])
-  }
+  }}
    return(chast)
 }
 # read experimental data
@@ -103,7 +103,7 @@ run_midcor<-function(inputFileName, output){
         a=findfrg(rada,iln,colmet,colfrg);
         chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]]; lnfrg=length(fra1);
 #      for(frcyc in 1:lnfrg){
-#        if(frcyc>1) chast=exfrag(rada,frcyc,iln,colmet,colfrg);
+#        if(frcyc>1) chast=exfrag(rada,fra1[frcyc],111,colmet,colfrg);
         
         data=convert(chast,2); #datacont=c("id","mm","i","nmet","nC","nfrg")
         res=correct(data,fn1)
@@ -120,5 +120,5 @@ run_midcor<-function(inputFileName, output){
     }
     rdcor=cbind(rada,newcol)
      write.table(rdcor,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
-}
+ return(newcol) }
 
