@@ -1,7 +1,7 @@
-correct<-function(data,fn1,mdcor="con"){
+correct<-function(onemet,fn1,mdcor="con"){
   md<-substr(mdcor,1,2);
-  id=data[[1]]; mm=data[[2]]; iln=data[[3]];
-   nmet<-data[[4]]; nC<-data[[5]]; nfrg<-data[[6]]; nSi<-0; nS<-0;
+  id=onemet[[1]]; mm=onemet[[2]]; iln=onemet[[3]];
+   nmet<-onemet[[4]]; nC<-onemet[[5]]; nfrg<-onemet[[6]]; nSi<-0; nS<-0;
    ncol=length(mm[1,]);  nmass=ncol-1; nln<-length(id);
 # normalization
     mdf=data.frame(cbind(id,mm), row.names = NULL);
@@ -85,13 +85,12 @@ exfrag<-function(rada,frag,iln,colmet,colfrg){
      }
    return(chast)
 }
-# read experimental data
 run_midcor<-function(inputFileName, output){
   fn<-file.path(inputFileName);
   fn1<-paste(fn,"_c",sep="");
   write("",fn1);
   write("",output);
-  rada<-read.table(fn, sep=",");
+  rada<-read.table(fn, sep=",");   # read experimental data
   for(i in 1:length(rada)) {
         if(grepl("isotop",rada[1,i])) {isoname=i; } # column of signal intensity
         if(grepl("Metab",rada[1,i])) {colmet=i}
@@ -108,19 +107,20 @@ tot=data.frame();
       for(frcyc in 1:lnfrg){
         if(frcyc>1) chast=exfrag(rada,fra1[frcyc],lnst,colmet,colfrg);
 
-        data=convert(chast,2); #datacont=c("id","mm","i","nmet","nC","nfrg")
-        res=correct(data,fn1)
+        onemet=convert(chast,2); #datacont=c("id","mm","i","nmet","nC","nfrg")
+        res=correct(onemet,fn1)
         nstrok=length(res[,1]);
         i=1; newcol=as.character(chast[,isoname]);
         for(j in 1:nstrok){
                 while(chast[i,isoname]!="m0") {i=i+1;}
-                        for(k in 1:(data[[6]]+1)) {
-                                  newcol[i]=as.character(res[j,k+1]); i=i+1;
+                        for(k in 1:(onemet[[6]]+1)) {
+                                  newcol[i]=res[j,k+1]; i=i+1;
                         }
         }
-        chast=cbind(chast[-c(1),],newcol[-c(1)]); iln=iln+data[[3]]-2; tot=rbind(tot,chast)
+        chast=cbind(chast[-c(1),],newcol[-c(1)]); iln=iln+onemet[[3]]-2; tot=rbind(tot,chast)
         }
     }
-     write.table(tot,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
- return(newcol) }
+   write.table(rada[1,],output,sep=",",append=F,col.names=FALSE, row.names = F);
+   write.table(tot,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
+   return(newcol) }
 
