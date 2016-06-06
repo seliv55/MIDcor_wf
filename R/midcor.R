@@ -90,6 +90,7 @@ run_midcor<-function(inputFileName, output){
   fn<-file.path(inputFileName);
   fn1<-paste(fn,"_c",sep="");
   write("",fn1);
+  write("",output);
   rada<-read.table(fn, sep=",");
   for(i in 1:length(rada)) {
         if(grepl("isotop",rada[1,i])) {isoname=i; } # column of signal intensity
@@ -117,7 +118,7 @@ tot=data.frame();
                                   newcol[i]=as.character(res[j,k+1]); i=i+1;
                         }
         }
-        chast=cbind(chast,newcol); iln=iln+data[[3]]-2; tot=rbind(tot,chast)
+        chast=cbind(chast[-c(1),],newcol[-c(1)]); iln=iln+data[[3]]-2; tot=rbind(tot,chast)
         }
     }
      write.table(tot,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
