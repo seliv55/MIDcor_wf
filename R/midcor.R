@@ -77,11 +77,12 @@ findfrg<-function(rada,iln,colmet,colfrg){
                            if(i==len){break;};  i=i+1; }
    return(list(chast,fra1,i,k)) }
 
-exfrag<-function(rada,metab,iln,colmet,colfrg){ chast<-rada[1,];
+exfrag<-function(rada,frag,iln,colmet,colfrg){
    i=iln; chast<-rada[1,]; len=length(rada[,1]);
-   while(i<=len) {if(metab==rada[i,colmet]){ i=i+1;
-     if(fra1[nfrg]==rada[i,colfrg]) chast=rbind(chast,rada[i,])
-  }}
+   while(i<=len) {
+     if(frag==rada[i,colfrg]){ chast=rbind(chast,rada[i,]); i=i+1 }
+      else { i=i+1}
+     }
    return(chast)
 }
 # read experimental data
@@ -91,34 +92,34 @@ run_midcor<-function(inputFileName, output){
   write("",fn1);
   rada<-read.table(fn, sep=",");
   for(i in 1:length(rada)) {
-        if(grepl("isotop",rada[1,i])) {newcol=as.character(rada[,i])} # column of signal intensity
+        if(grepl("isotop",rada[1,i])) {isoname=i; } # column of signal intensity
         if(grepl("Metab",rada[1,i])) {colmet=i}
         if(grepl("atomic pos",rada[1,i])) {colfrg=i}
   }
    iln=2;
-
+tot=data.frame();
    Mtb=levels(rada[,colmet]); numet=length(Mtb)-1;
    for(ii in 1:numet){
         write(as.character(paste("\n----",Mtb[ii]," ---\n")),fn1,append=TRUE);
         a=findfrg(rada,iln,colmet,colfrg);
         chast=a[[1]]; fra1=a[[2]]; i=a[[3]]; k=a[[4]]; lnfrg=length(fra1);
-#      for(frcyc in 1:lnfrg){
-#        if(frcyc>1) chast=exfrag(rada,fra1[frcyc],111,colmet,colfrg);
-        
+        if(lnfrg>1) lnst=iln;
+      for(frcyc in 1:lnfrg){
+        if(frcyc>1) chast=exfrag(rada,fra1[frcyc],lnst,colmet,colfrg);
+
         data=convert(chast,2); #datacont=c("id","mm","i","nmet","nC","nfrg")
         res=correct(data,fn1)
         nstrok=length(res[,1]);
-        i=iln;
+        i=1; newcol=as.character(chast[,isoname]);
         for(j in 1:nstrok){
-                while(newcol[i]!="m0") {i=i+1;}
+                while(chast[i,isoname]!="m0") {i=i+1;}
                         for(k in 1:(data[[6]]+1)) {
-                                newcol[i]=as.character(res[j,k+1]); i=i+1;
+                                  newcol[i]=as.character(res[j,k+1]); i=i+1;
                         }
         }
-        iln=iln+data[[3]]-2;
-#        }
+        chast=cbind(chast,newcol); iln=iln+data[[3]]-2; tot=rbind(tot,chast)
+        }
     }
-    rdcor=cbind(rada,newcol)
-     write.table(rdcor,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
+     write.table(tot,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
  return(newcol) }
 
