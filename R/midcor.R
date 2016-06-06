@@ -98,7 +98,7 @@ run_midcor<-function(inputFileName, output){
         if(grepl("atomic pos",rada[1,i])) {colfrg=i}
   }
    iln=2;
-tot=data.frame();
+tot=data.frame();  asd<-cbind(rada[1,]," ");
    Mtb=levels(rada[,colmet]); numet=length(Mtb)-1;
    for(ii in 1:numet){
         write(as.character(paste("\n----",Mtb[ii]," ---\n")),fn1,append=TRUE);
@@ -115,12 +115,13 @@ tot=data.frame();
         for(j in 1:nstrok){
                 while(chast[i,isoname]!="m0") {i=i+1;}
                         for(k in 1:(data[[6]]+1)) {
-                                  newcol[i]=as.character(res[j,k+1]); i=i+1;
+                                  newcol[i]=res[j,k+1]; i=i+1;
                         }
         }
         chast=cbind(chast[-c(1),],newcol[-c(1)]); iln=iln+data[[3]]-2; tot=rbind(tot,chast)
         }
     }
-     write.table(tot,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
- return(newcol) }
+   write.table(rada[1,],output,sep=",",append=F,col.names=FALSE, row.names = F);
+   write.table(tot,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
+   return(newcol) }
 
