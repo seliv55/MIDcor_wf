@@ -78,39 +78,46 @@ mdistr<-function(nreal,msd,mm,nln){ #label incorporation
 
 ginfo<-function(rawdat,ln){
   for(i in 1:length(rawdat)){if(grepl("deriv",rawdat[1,i])) {kk=i;} # column of formula
-              else {if(grepl("posit",rawdat[1,i])) {ifrg=i;}} #  column of studied fragment
+              else {if(grepl("posit",rawdat[1,i])) {colfrg=i;}} #  column of studied fragment
                            }
        a=strsplit(as.character(rawdat[ln,kk]),"C")[[1]][2]; # C atoms in derivate
        nCder=as.numeric(strsplit(a,"H")[[1]][1]);
 
-       a=strsplit(as.character(rawdat[ln,ifrg]),"C")[[1]]; # C atoms in the fragment
+       a=strsplit(as.character(rawdat[ln,colfrg]),"C")[[1]]; # C atoms in the fragment
        nCfrg=as.numeric(a[3])-as.numeric(strsplit(a[2],"-")[[1]][1])+1;
-       return (list(nCder,nCfrg,ifrg))
+       return (list(nCder,nCfrg,colfrg))
        }
 convert<-function(rdat,iln){
         colid=1; a=ginfo(rdat,iln);
-         nCder=a[[1]]; nCfrg=a[[2]]; ifrg=a[[3]];
-  for(i in 1:length(rdat)){if(grepl("intens",rdat[1,i])) {mdis=i;} # column of signal intensity
-               else {if(grepl("Metab",rdat[1,i])) nmet=i;} #  column of studied fragment
-         if (grepl("Inject",rdat[1,i])) {inj=i; repl=i+1; cond=i+2;}
+         nCder=a[[1]]; nCfrg=a[[2]]; colfrg=a[[3]];
+  for(i in 1:length(rdat)){if(grepl("intens",rdat[1,i])) {coldis=i;} # column of signal intensity
+               else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of studied fragment
+         if (grepl("Inject",rdat[1,i])) {colinj=i; colrep=i+1; colcond=i+2;}
          }
          i=iln;
          id=as.character(rdat[i,colid]);
-            samp=rdat[i,inj];
-             met=rdat[i,nmet];
-             frag=rdat[i,ifrg];
-          m=numeric(); k=1;
-       while(samp==rdat[i,inj]) {if(frag==rdat[i,ifrg]){ m[k]=as.numeric(as.character(rdat[i,mdis])); i=i+1; k=k+1;}
-             else {i=i+1;}};
+         idsum=paste(rdat[i,colcond],as.character(rdat[i,colcond+1]),sep="_");
+         ninj=rdat[i,colinj];
+         nrepl=rdat[i,colrep];
+         met=rdat[i,colmet];
+         frag=rdat[i,colfrg];
+         cond=rdat[i,colcond];
+         m=numeric(); k=1;
+       while(ninj==rdat[i,colinj]) {
+         if(frag==rdat[i,colfrg]){
+               m[k]=as.numeric(as.character(rdat[i,coldis])); i=i+1; k=k+1;}
+         else {i=i+1;}};
        lm=length(m);
-       mm=matrix(nrow=1,ncol=lm); mm[1,]=m;
-       while(met==rdat[i,nmet]){ id=c(id,as.character(rdat[i,colid]));
-         samp=rdat[i,inj];
-            m=numeric(); k=1;
-       while(samp==rdat[i,inj]) {
-         {
-           if(frag==rdat[i,ifrg]){
-             m[k]=as.numeric(as.character(rdat[i,mdis]));
+       mm=matrix(nrow=1,ncol=lm); mmm=mm; mm[1,]=m; m1=m;
+       while(met==rdat[i,colmet]){ id=c(id,as.character(rdat[i,colid]));
+         ninj=rdat[i,colinj];
+            m=numeric(lm); k=1;
+             if(nrepl!=rdat[i,colrep]){ idsum=c(idsum,paste(rdat[i,colcond],rdat[i,colcond+1],sep="_"));
+               mmm=rbind(mmm,m1); nrepl=rdat[i,colrep]; m1=m;}
+       while(ninj==rdat[i,colinj]) {
+         { if(frag==rdat[i,colfrg]){
+             m[k]=as.numeric(as.character(rdat[i,coldis]));
+              if(nrepl==rdat[i,colrep]){m1[k]=m1[k]+m[k];}
              i=i+1;
              k=k+1;
            }
@@ -118,10 +125,8 @@ convert<-function(rdat,iln){
              i=i+1
            }
          }
-       if(i>length(rdat[,1])) {break}}
+       if(i>length(rdat[,1])) {mmm=rbind(mmm,m1); break}}
        if(lm==length(m)) {mm=rbind(mm,m)};
        if(i>length(rdat[,1])) {break}}
-       return(list(id,mm,i,nmet,nCder,nCfrg))
+       return(list(id,mm,i,colmet,nCder,nCfrg,mmm[-1,],idsum))
 }
-
-
