@@ -36,10 +36,12 @@ correct<-function(chast,fn1,fn2,mdcor="con"){
  if(md=="va") { for(ii in 1:9) {tmp<-gcmsn;
     for(j in 1:nln)  for(k in 1:(nfrg+1))  for(i in 1:(nmass+1-k)) tmp[j,i+1+k]<-tmp[j,i+1+k]-corr[i]*(fr[j,1+k]);
       fr<-mdistr(nfrg,tmp,mmteor,nln);
+    for(j in 1:nstrok)  for(k in 1:(nfrg+1))  for(i in 1:(nmass+1-k)) mdful[j,i+1+k]<-mdful[j,i+1+k]-corr[i]*(fr[j,1+k]);
+      mdful<-mdistr(nfrg,mdful,mmteor,nstrok);
         }}
   if(md=="co") { for(j in 1:nln)  gcmsn[j,3:(2+nmass)]<-gcmsn[j,3:(2+nmass)]-corr;
      fr<-mdistr(nfrg,gcmsn,mmteor,nln);
-      for(j in 1:nstrok)  mdful[j,3:(2+nmass)]<-mdful[j,3:(2+nmass)]-corr;
+                 for(j in 1:nstrok)  mdful[j,3:(2+nmass)]<-mdful[j,3:(2+nmass)]-corr;
      mdful<-mdistr(nfrg,mdful,mmteor,nstrok);}
 
                              i<-1; lfr<-length(fr);
@@ -111,7 +113,7 @@ tot=data.frame();
         if(lnfrg>1) lnst=iln;
       for(frcyc in 1:lnfrg){
         if(frcyc>1) chast=exfrag(rada,fra1[frcyc],lnst,colmet,colfrg);
-        res=correct(chast,fn1,fn2,"var")
+        res=correct(chast,fn1,fn2)#,"var")
         nstrok=length(res[[1]][,1]);
         i=1; newcol=as.character(chast[,isoname]);
               for(j in 1:nstrok){
@@ -123,7 +125,8 @@ tot=data.frame();
         chast=cbind(chast[-c(1),],newcol[-c(1)]); iln=iln+res[[3]]-2; tot=rbind(tot,chast)
         }
     }
-   write.table(rada[1,],output,sep=",",append=F,col.names=FALSE, row.names = F);
+    alname=cbind(rada[1,],"midcor")
+   write.table(alname,output,sep=",",append=F,col.names=FALSE, row.names = F);
    write.table(tot,output,sep=",",append=TRUE,col.names=FALSE, row.names = F);
    return(newcol) }
 
