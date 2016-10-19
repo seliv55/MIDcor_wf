@@ -22,7 +22,9 @@ Version: 1.0
 
 ## Screenshots
 
-- input data format, output data format
+- screenshot of input data (format Metabolights), output is the same format with one more column added: corrected mass spectrum
+
+![screenshot](Screenshot)
 
 ## Tool Authors
 
