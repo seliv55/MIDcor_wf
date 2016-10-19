@@ -44,9 +44,11 @@ Version: 1.0
 
 ## Installation
 
-For local individual installation:
- install "R" as proposed for the given operative system, copy "midcor.R" and "lib.R" into the working directory.
- 
+'''   # standing on the directory where the package is (midcor)
+library(devtools)
+build()
+install() '''
+
 ## Usage Instructions
 
 1. Open terminal, change directory to the working directory containing the file with the R-program (“midcor.R”) and files with input data. 
