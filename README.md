@@ -24,7 +24,7 @@ Version: 1.0
 
 - screenshot of input data (format Metabolights), output is the same format with one more column added: corrected mass spectrum
 
-![screenshot](Screenshot)
+![screenshot](Screenshot.png)
 
 ## Tool Authors
 
