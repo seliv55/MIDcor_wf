@@ -3,29 +3,50 @@
 # MIDcor
 Version: 1.0
 ## “R”-program that corrects raw isotopic isomers spectra for natural occurring isotopes and overlapping of peaks for several metabolites in m/z scale
+
 ## Description
+
 “midcor.R” is an “R”-program performs a primary analysis of isotopic isomers (isotopomers) distribution obtained by Gas Cromatography coupled with Mass Spectrometry (GCMS). The aim of this analysis is to have a correct distribution of artificially introduced isotopes. To this end the program performs a correction for natural occurring isotopes and also correction for “impurities” of the assay media that give peaks overlapping with the those produced by the artificially introduced label. This program offers two ways of corrections of “impurities” resulted from overlapping the assayed mass isotopomer distribution with peaks produced either by unknown metabolites in the media, or by different fragments produced by the assayed metabolite. 
 
 ## Key features
+
 - primary processing of 13C mass isotopomer data obtained with GCMS
+
 ## Metabolomics Technologies
+
 - GCMS
+
 ## Data Analysis
+
 - correction for H+ loss produced by electron impact, natural occurring isotopes, and peaks overlapping
+
 ## Screenshots
+
 - input data format, output data format
+
 ## Tool Authors
+
 - Vitaly Selivanov (Universitat de Barcelona)
+
 ## Container Contributors
+
 - [Pablo Moreno](EBI)
+
 ## Website
+
 - N/A
+
 ## Git Repository
+
 - https://github.com/seliv55/midcor
+
 ## Installation
+
 For local individual installation:
  install "R" as proposed for the given operative system, copy "midcor.R" and "lib.R" into the working directory.
+ 
 ## Usage Instructions
+
 1. Open terminal, change directory to the working directory containing the file with the R-program (“midcor.R”) and files with input data. 
 
 2. Enter into the R shell: ???@???:~/R$ R 
