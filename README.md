@@ -45,9 +45,13 @@ Version: 1.0
 ## Installation
 
 '''   # standing on the directory where the package is (midcor)
+
 library(devtools)
+
 build()
-install() '''
+
+install()
+ '''
 
 ## Usage Instructions
 
