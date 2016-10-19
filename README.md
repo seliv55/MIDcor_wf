@@ -1,4 +1,4 @@
-![Logo]()
+![Logo](text4217.png)
 
 # MIDcor
 Version: 1.0
