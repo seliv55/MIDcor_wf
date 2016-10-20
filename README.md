@@ -58,10 +58,8 @@ source("midcor.R")
   
   
      # 2) Docker image. To create the Docker container: i) go to the directory where the dockerfile is;
-              ii) create container from dockerfile
+              ii) create container from dockerfile:
 ''' 
-cd /home/vs/phenomen/docker-midcor
-     
 sudo docker build -t midcor:0.1 .
 '''
 
