@@ -46,7 +46,7 @@ Version: 1.0
 
  # 1) As independent program. MIDcor itself does not require installation. Standing in the MIDcor directory enter in R environment with the command:
   
-  R
+'''  R '''
   
   # read the necessary functions:
   
@@ -60,7 +60,6 @@ source("midcor.R")
      # 2) Docker image. To create the Docker container: i) go to the directory where the dockerfile is;
               ii) create container from dockerfile
 ''' 
-
 cd /home/vs/phenomen/docker-midcor
      
 sudo docker build -t midcor:0.1 .
