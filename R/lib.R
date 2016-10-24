@@ -88,7 +88,7 @@ ginfo<-function(rawdat,ln){
        return (list(nCder,nCfrg,colfrg))
        }
 convert<-function(rdat,iln){
-        colid=1; a=ginfo(rdat,iln);
+        colid=1; a=ginfo(rdat,iln);colmet=0;
          nCder=a[[1]]; nCfrg=a[[2]]; colfrg=a[[3]];
   for(i in 1:length(rdat)){if(grepl("intens",rdat[1,i])) {coldis=i;} # column of signal intensity
                else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of studied fragment
