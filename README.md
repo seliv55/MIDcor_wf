@@ -2,7 +2,7 @@
 
 # MIDcor
 Version: 1.0
-## “R”-program that corrects raw isotopic isomers spectra for natural occurring isotopes and overlapping of peaks for several metabolites in m/z scale
+## “R”-program that corrects 13C mass isotopomers spectra of metabolites for natural occurring isotopes and peaks overlapping
 
 ## Description
 
@@ -26,7 +26,6 @@ Version: 1.0
 ## Instrument Data Types
 
 - MS
-
 
 ## Data Analysis
 
