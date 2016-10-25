@@ -2,7 +2,9 @@
 
 # MIDcor
 Version: 1.0
-## “R”-program that corrects 13C mass isotopomers spectra of metabolites for natural occurring isotopes and peaks overlapping
+## Short Description
+
+“R”-program that corrects 13C mass isotopomers spectra of metabolites for natural occurring isotopes and peaks overlapping
 
 ## Description
 
