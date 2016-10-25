@@ -57,38 +57,35 @@ Version: 1.0
 
 ## Installation
 
- # 1) As independent program. MIDcor itself does not require installation. Standing in the MIDcor directory enter in R environment with the command:
+- 1) As independent program. MIDcor itself does not require installation. Standing in the MIDcor directory enter in R environment with the command:
   
 '''  R '''
   
-  # read the necessary functions:
+ read the necessary functions:
   
-'''
-source("lib.R")
+''' source("lib.R")
   
-source("midcor.R")
-'''
+source("midcor.R")'''
   
   
-     # 2) Docker image. To create the Docker container: i) go to the directory where the dockerfile is;
-              ii) create container from dockerfile:
-''' 
-sudo docker build -t midcor:0.1 .
-'''
+- 2) Docker image. To create the Docker container: 
+        - go to the directory where the dockerfile is;
+        - create container from dockerfile:
+''' sudo docker build -t midcor:0.1 . '''
 
 ## Usage Instructions
 
- # To run MIDcor independently: standing in the MIDcor directory inside R environment, after reading the sources execute the command:
+  To run MIDcor independently: standing in the MIDcor directory inside R environment, after reading the sources execute the command:
  
  ''' run_midcor("input_file","output_file")  '''
  
- # here input file should be in Metabolights format, as is shown in the screenshot
+ here input file should be in Metabolights format, as is shown in the screenshot
  
- # To run MIDcor as a docker image, execute
+ To run MIDcor as a docker image, execute
  
  '''  sudo docker run -i -t -v $PWD:/data midcor:0.1 -i /data/input.csv -o /data/output.csv '''
 
- # An example of input file is provided as "outin.csv"
+ An example of input file is provided as "outin.csv"
 
 ## Publications
 - “MIDcor”, an R-program for deciphering mass interferences in mass spectra of metabolites enriched in stable isotopes. Submitted to BMC bioinformatics.
