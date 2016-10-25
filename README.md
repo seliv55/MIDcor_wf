@@ -12,9 +12,21 @@ Version: 1.0
 
 - primary processing of 13C mass isotopomer data obtained with GCMS
 
-## Metabolomics Technologies
+## Functionality
 
-- GCMS
+- Preprocessing
+- Statistical Analysis
+- Workflows
+
+## Approaches
+
+- Isotopic Labelling Analysis
+    - 13C
+    
+## Instrument Data Types
+
+- MS
+
 
 ## Data Analysis
 
