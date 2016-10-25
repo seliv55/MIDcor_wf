@@ -22,8 +22,7 @@ Version: 1.0
 
 ## Approaches
 
-- Isotopic Labelling Analysis
-    - 13C
+- Isotopic Labelling Analysis / 13C
     
 ## Instrument Data Types
 
