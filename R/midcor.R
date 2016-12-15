@@ -1,5 +1,3 @@
-source("lib.R")
-
 correct<-function(chast,fn1,fn2,mdcor="con"){
   md<-substr(mdcor,1,2);
   onemet=convert(chast,2); #datacont=c("id","mm","i","nmet","nC","nfrg")
