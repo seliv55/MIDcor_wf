@@ -98,10 +98,10 @@ exfrag<-function(rada,frag,iln,colmet,colfrg){
      }
    return(chast)
 }
-run_midcor<-function(inputFileName="ramidnor.csv", output="corr-nor.csv",mode="con"){
+run_midcor<-function(inputFileName="ramidout.csv", output="corr-hyp.csv",mode="con"){
   fn<-file.path(inputFileName);
   fn1<-paste(fn,"_c",sep="");
-  fn2<-file.path("edata");
+  fn2<-file.path("/data/edata");
   write("",fn1);
   write("",output);
   rada<-read.table(fn, sep=",");   # read experimental data
