@@ -98,14 +98,14 @@ exfrag<-function(rada,frag,iln,colmet,colfrg){
      }
    return(chast)
 }
-run_midcor<-function(inputFileName="ramidout.csv", output="corr-hyp.csv",mode="con"){
+run_midcor<-function(inputFileName="xramidout.csv", output="midcorout.csv",mode="con"){
   fn<-file.path(inputFileName);
   fn1<-paste(fn,"_c",sep="");
-  fn2<-file.path("/data/edata");
+  fn2<-file.path("edata");
   write("",fn1);
   write("",output);
   rada<-read.table(fn, sep=",");   # read experimental data
-  for(i in 1:length(rada)) {
+  for(i in 1:ncol(rada)) {
         if(grepl("time",rada[1,i])) {coltime=i}  # column of incubation time
          if(grepl("Metab",rada[1,i])) {colmet=i}  # column of metabolite name
         if(grepl("atomic pos",rada[1,i])) {colfrg=i}  # carbon positions in the fragment
@@ -113,7 +113,7 @@ run_midcor<-function(inputFileName="ramidout.csv", output="corr-hyp.csv",mode="c
         if(grepl("isotopol",rada[1,i])) {isoname=i; } # isotopolog symbols
         if(grepl("abundance",rada[1,i])) {abund=i}  # calculated fractions of isotopologs
   }
-  tt<-na.omit(as.numeric(levels(rada[,coltime])))
+  tt<-na.omit(as.numeric(levels(rada[,coltime])))[1]
   cat(c(tt,-1),"\n",c(1,2),"growth_0_t\nAnusha\n",file=fn2);
    iln=2;
 tot=data.frame();
@@ -130,7 +130,7 @@ tot=data.frame();
         nstrok<-nrow(res[[1]])
         i=1; newcol<-numeric()
               for(j in 1:nstrok){
-                while(chast[i,isoname]!="m0") {i=i+1;}
+                while(!grepl("C0",chast[i,isoname])) {i=i+1;}
                         for(k in 1:(res[[2]]+1)) {
                                   newcol[i]<-res[[1]][j,k]*100.; i=i+1;
                                                      }

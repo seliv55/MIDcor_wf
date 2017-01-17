@@ -70,7 +70,7 @@ Version: 1.0
        
  '''   library(midcor) '''
 
-- 2) read directly the necessary functions:
+- 2) alternatively, read directly the necessary functions:
   
 ''' source("R/midcor.R")'''
 

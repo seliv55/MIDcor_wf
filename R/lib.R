@@ -94,7 +94,7 @@ convert<-function(rdat,iln){
          nCder=a[[1]]; nCfrg=a[[2]]; colfrg=a[[3]];
   for(i in 1:ncol(rdat)){if(grepl("signal intens",rdat[1,i])) {coldis=i} # column of signal intensity
                else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of metabolite name
-         if (grepl("Inject",rdat[1,i])) {colinj=i; colrep=i+1;}
+         if (grepl("inject",rdat[1,i])) {colinj=i; colrep=i+1;}
          if (grepl("labelled pos",rdat[1,i])) colab=i
          }
          ninj<-rdat[iln,colinj];
