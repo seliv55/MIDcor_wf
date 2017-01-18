@@ -101,7 +101,7 @@ exfrag<-function(rada,frag,iln,colmet,colfrg){
 run_midcor<-function(inputFileName="ramidout.csv", output="midcorout.csv",mode="con"){
   fn<-file.path(inputFileName);
   fn1<-paste(fn,"_c",sep="");
-  fn2<-file.path("data/edata");
+  fn2<-file.path("edata");
   write("",fn1);
   write("",output);
   rada<-read.table(fn, sep=",");   # read experimental data
