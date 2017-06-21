@@ -78,53 +78,45 @@ mdistr<-function(nreal,msd,mm,nln){ #label incorporation
         for(i in 2:(nucol-1)) {fr[,nucol]<- fr[,nucol]+fr[,i];}
       return(fr) }
 
-ginfo<-function(rawdat,ln){
-  for(i in 1:ncol(rawdat)){if(grepl("formula derivatized",rawdat[1,i])) {kk=i;} # column of formula
-              else {if(grepl("atomic positions",rawdat[1,i])) {colfrg=i;}} #  column of studied fragment
+ginfo<-function(rawdat,ln){ifor<-0
+  for(i in 1:ncol(rawdat)){if(grepl("formula derivatized",rawdat[1,i])) {ifor=i;} # column of formula
+              else {if(grepl("atomic pos",rawdat[1,i])) {colfrg=i;}} #  column of studied fragment
                            }
-       a=strsplit(as.character(rawdat[ln,kk]),"C")[[1]][2]; # C atoms in derivate
+       a=strsplit(as.character(rawdat[ln,ifor]),"C")[[1]][2]; # C atoms in derivate
        nCder=as.numeric(strsplit(a,"H")[[1]][1]);
 
+       a=strsplit(as.character(rawdat[ln,ifor]),"Si")[[1]]; # Si atoms in derivate
+       nSi<-0
+       if(length(a)>1) nSi<-as.numeric(a[2])
+       
        a=strsplit(as.character(rawdat[ln,colfrg]),"C")[[1]]; # C atoms in the fragment
        nCfrg=as.numeric(a[3])-as.numeric(strsplit(a[2],"-")[[1]][1])+1;
-       return (list(nCder,nCfrg,colfrg))  }
+       return (list(nCder,nCfrg,nSi,colfrg))  }
        
 convert<-function(rdat,iln){
         colid=1; a=ginfo(rdat,iln);colmet=0;
-         nCder=a[[1]]; nCfrg=a[[2]]; colfrg=a[[3]];
+         nCder=a[[1]]; nCfrg=a[[2]]; nSi=a[[3]]; colfrg=a[[4]];
   for(i in 1:ncol(rdat)){if(grepl("signal intens",rdat[1,i])) {coldis=i} # column of signal intensity
                else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of metabolite name
-         if (grepl("inject",rdat[1,i])) {colinj=i; colrep=i+1;}
+         if (grepl("isotopolog",rdat[1,i])) {coliso=i;}
          if (grepl("labelled pos",rdat[1,i])) colab=i
          }
-         ninj<-rdat[iln,colinj];
-         nrepl<-rdat[iln,colrep];
          met<-rdat[iln,colmet];
          frag<-rdat[iln,colfrg];
-         m<-numeric();     k<-1;
-           i<-iln;  id<-paste(rdat[i,colid],substr(rdat[i,colab],1,3),sep="_");   idsum<-id
-       while(ninj==rdat[i,colinj]) {# distribution of intensities for 1st injection
-         if(frag==rdat[i,colfrg]){
-               m[k]=as.numeric(as.character(rdat[i,coldis])); i=i+1; k=k+1}
-         else i=i+1 }
-       lm<-length(m)
-       mm<-matrix(nrow=1,ncol=lm); mmm=mm # mm - for all inj; mmm - for summed inj
-        mm[1,]=m; m1=m                    # m - for all inj; m1 - for summed inj
-       while(met==rdat[i,colmet]){  #  metabolite cycle
-        id<-c(id,as.character(rdat[i,colid]))
-         ninj<-rdat[i,colinj];
-            m<-numeric(lm); k<-1
-             if(nrepl!=rdat[i,colrep]){ newrep<-paste(rdat[i,colid],substr(rdat[i,colab],1,3),sep="_")
-              idsum=c(idsum,newrep);
-               mmm=rbind(mmm,m1); nrepl=rdat[i,colrep]; m1=m;}
-       while(ninj==rdat[i,colinj]) {  #  replicate cycle
-          if(frag==rdat[i,colfrg]){
-             m[k]=as.numeric(as.character(rdat[i,coldis]));
-              if(nrepl==rdat[i,colrep]) m1[k]=m1[k]+m[k] # sum of injections
-             i=i+1;  k=k+1 }
-           else { i=i+1 }
-       if(i>nrow(rdat)) {mmm=rbind(mmm,m1); break}}
-       if(lm==length(m)) {mm=rbind(mm,m)};
-       if(i>nrow(rdat)) {break}}
-       return(list(id,mm,i,colmet,nCder,nCfrg,mmm[-1,],idsum))
+        
+           i<-iln+1;  id<-as.character(rdat[i,colid]); numln<-nrow(rdat)
+           rdat[,coliso]<-as.character(rdat[,coliso])
+            first<-0; m<-numeric(); 
+            
+      while(i<nrow(rdat)){
+      while(grepl("13C-1",rdat[i,coliso]) | rdat[i,coliso]=="") i<-i+1
+      if(grepl("13C",rdat[i,coliso])){    k<-1;
+       while(as.integer(strsplit(rdat[i,coliso],"13C")[[1]][2]) >= 0) {
+               m[k]=as.numeric(as.character(rdat[i,coldis])); i<-i+1; if(!grepl("13C",rdat[i,coliso])) break; k<-k+1;}
+                           first<-first+1;
+                          if(first==1) { lm<-length(m); mm<-matrix(nrow=1,ncol=lm); mm[1,]<-m;}
+                           else mm<-rbind(mm,m)
+                            }
+      }
+           return(list(id,mm,i,colmet,nCder,nCfrg,nSi))
 }
