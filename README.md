@@ -56,12 +56,12 @@ Version: 1.0
 
 ## Installation
 
-- As independent program. MIDcor itself does not require installation. Standing in the MIDcor directory enter in R environment with the command:
-  
-''' sudo R '''
+- As independent program. MIDcor itself does not require installation. There are two ways of using it: either creating a library "midcor", or reading source files containing the implemented functions. Standing in the midcor directory:
   
 - 1) Create a library of functions:
 
+''' sudo R '''
+  
  '''   library(devtools) '''
 
  '''   build() '''
@@ -72,19 +72,21 @@ Version: 1.0
 
 - 2) alternatively, read directly the necessary functions:
   
-''' source("R/midcor.R")'''
+''' R '''
+  
+''' source("R/midcor.R") '''
 
-''' source("R/lib.R")'''
+''' source("R/lib.R") '''
 
 ## Usage Instructions
 
   To run MIDcor independently: standing in the MIDcor directory inside R environment, after reading the sources execute the command:
  
- ''' run_midcor(infile, outfil,mode) '''
+ ''' run_midcor(infile, outfile, mode) '''
  
  here input file should be in Metabolights format, as is shown in the screenshot
  
-## An example provided
+## two examples provided
 
  MIDcor uses as input the file prepared by RaMID: 
  
@@ -92,9 +94,9 @@ Version: 1.0
  
  Also MIDcor can use as input the file prepared by cdf2mid: 
  
- ''' run_midcor(infile="../ cdf2mid/cdf2midout.csv", outfile="midcorout.csv",mode="con") ''' 
+ ''' run_midcor(infile="../cdf2mid/cdf2midout.csv", outfile="midcorout.csv",mode="con") ''' 
  
-Using the atomic composition of the metabolites, derivatized for gas chromatography, and known natiral isotopes composition, MIDcor corrects the raw spectra, extracted by RaMID from the CDF files, for natirally occurring isotopes. Moreover, it corrects the possible overlapping of peaks belonging to different substances, as described in [1]. File "midcorout.csv" contains all the data presented in "../RaMID/ramidout.csv" corrected. Further analysis, performed with Iso2flux or Isodyn, consists in simulations of the corrected mass spectra for the specific conditions of the given experiment. "midcorout.csv" can contain data referred to several conditions, e.g. the corrected file produced from CDF collection archived in "roldan.zip" includes data obtained from three cell lines. Since separate simulations needed to reproduce the spectra corresponding to each cell line, MIDcor also separates the data of "midcorout.csv" into the corresponding three files: "A549", "BEAS2B", "NCI". Each of these files is prepared for the subsequent simulation with Iso2flux or Isodyn.
+Using the atomic composition of the metabolites, derivatized for gas chromatography, and known natiral isotopes composition, MIDcor corrects for natirally occurring isotopes the raw spectra, extracted by RaMID from the CDF files. Moreover, it corrects the possible overlapping of peaks belonging to different substances, as described in [1]. File "midcorout.csv" contains all the data presented in "../RaMID/ramidout.csv" corrected. Further analysis, performed with Iso2flux or Isodyn, consists in simulations of the corrected mass spectra for the specific conditions of the given experiment. "midcorout.csv" can contain data referred to several conditions, e.g. the corrected file produced from CDF collection archived in "roldan.zip" includes data obtained from three cell lines. Since separate simulations needed to reproduce the spectra corresponding to each cell line, MIDcor also separates the data of "midcorout.csv" into the corresponding three files: "A549", "BEAS2B", "NCI". Each of these files is prepared for the subsequent simulation with Iso2flux or Isodyn.
 
 ## Publications
 - [1] Selivanov VA, Benito A, Miranda A, Aguilar E, Polat IH, Centelles JJ, Jayaraman A, Lee PW, Marin S, Cascante M. MIDcor, an R-program for deciphering mass interferences in mass spectra of metabolites enriched in stable isotopes. BMC Bioinformatics. 2017, 18:88.
