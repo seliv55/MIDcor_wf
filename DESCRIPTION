@@ -1,6 +1,6 @@
 Package: midcor
 Title: Correction of raw GC/MS data for natural stable isotope abundace.
-Version: 0.0.0.9000
+Version: 0.0.1.0000
 Authors@R: person("Vitaly", "Selivanov", email = "selivanov@ub.edu", role = c("aut", "cre"))
 Description: correction of raw GC/MS data for natural stable isotope abundace to be used for evaluation of corresponding metabolic fluxes.
 Depends: R (>= 3.0.0)

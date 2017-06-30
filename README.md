@@ -60,29 +60,29 @@ Version: 1.0
   
 - 1) Create a library of functions:
 
-''' sudo R '''
+``` sudo R 
   
- '''   library(devtools) '''
+    library(devtools) 
 
- '''   build() '''
+    build() 
        
- '''   install() '''
+    install() 
        
- '''   library(midcor) '''
+    library(midcor) ```
 
 - 2) alternatively, read directly the necessary functions:
   
-''' R '''
+``` R 
   
-''' source("R/midcor.R") '''
+ source("R/midcor.R") 
 
-''' source("R/lib.R") '''
+ source("R/lib.R") ```
 
 ## Usage Instructions
 
   To run MIDcor independently: standing in the MIDcor directory inside R environment, after reading the sources execute the command:
  
- ''' run_midcor(infile, outfile, mode) '''
+ ``` run_midcor(infile, outfile, mode) ```
  
  here input file should be in Metabolights format, as is shown in the screenshot
  
@@ -90,11 +90,11 @@ Version: 1.0
 
  MIDcor uses as input the file prepared by RaMID: 
  
- ''' run_midcor(infile="../RaMID/ramidout.csv", outfile="midcorout.csv",mode="con") ''' 
+ ``` run_midcor(infile="../RaMID/ramidout.csv", outfile="midcorout.csv",mode="con") ``` 
  
  Also MIDcor can use as input the file prepared by cdf2mid: 
  
- ''' run_midcor(infile="../cdf2mid/cdf2midout.csv", outfile="midcorout.csv",mode="con") ''' 
+ ``` run_midcor(infile="../cdf2mid/cdf2midout.csv", outfile="midcorout.csv",mode="con") ``` 
  
 Using the atomic composition of the metabolites, derivatized for gas chromatography, and known natural isotopes composition, MIDcor corrects for naturally occurring isotopes the raw spectra, extracted by RaMID from the CDF files. Moreover, it corrects the possible overlapping of peaks belonging to different substances, as described in [1]. File "midcorout.csv" contains all the data presented in "../RaMID/ramidout.csv" corrected. Further analysis, performed with Iso2flux or Isodyn, consists in simulations of the corrected mass spectra for the specific conditions of the given experiment. "midcorout.csv" can contain data referred to several conditions, e.g. the corrected file produced from CDF collection archived in "roldan.zip" includes data obtained from three cell lines. Since separate simulations needed to reproduce the spectra corresponding to each cell line, MIDcor also separates the data of "midcorout.csv" into the corresponding three files: "A549", "BEAS2B", "NCI". Each of these files is prepared for the subsequent simulation with Iso2flux or Isodyn.
 
