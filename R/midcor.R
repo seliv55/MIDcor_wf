@@ -19,7 +19,7 @@ correct<-function(chast,fn1,mdcor){
 
 # correction factor
      corr<-numeric(nmass);
-     for(i in 1:nln) {if(grepl("nat",id[i])||grepl("com",id[i])||grepl("com",id[i])||grepl("COLD",id[i])||grepl("Cold",id[i])) break;}
+     for(i in 1:nln) {if(grepl("nat",id[i])||grepl("NAT",id[i])||grepl("com",id[i])||grepl("COLD",id[i])||grepl("Cold",id[i])) break;}
        corr<-mm[i,1:nmass]-mmteor[1,1:nmass]    # correction factor
        
  if(md=="va") { for(ii in 1:9) {
@@ -75,11 +75,9 @@ row2col<-function(res,metss,tot,isoname){
     return(tot)}
 
 
-run_midcor<-function(infile="ramidout.csv", outfile="midcorout.csv",mode="con"){
+run_midcor<-function(infile="../RaMID/ramidout.csv", outfile="midcorout.csv",mode="con"){
   fn<-file.path(infile);
   fn1<-paste(fn,"_c",sep="");
-   splifi<-strsplit(infile,"/")[[1]]
-    if(length(splifi)>1) datadir<-paste("/",splifi[2],"/",sep="") else datadir<-""
   write("",fn1);
   write("",outfile);
   rada<-read.table(fn, sep=",");   # read experimental data
@@ -115,7 +113,7 @@ tot<-data.frame(); # group the data for each metabolite and correct for natiral 
    
    for(i in 1:length(cells)) {
    conds<-subset(tot,(grepl(cells[i],tot[,2])))
-   ficond=paste(datadir,cells[i],sep="")
+   ficond=paste(cells[i])
    write.table(rada[1,],ficond,sep=",",append=F,col.names=FALSE, row.names = F);
    write.table(conds,ficond,sep=",",append=TRUE,col.names=FALSE, row.names = F);
    }
