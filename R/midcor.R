@@ -110,10 +110,13 @@ tot<-data.frame(); # group the data for each metabolite and correct for natiral 
    
    tracer<-levels(rada[,coltrac])
    tracer<-tracer[grepl("C13",tracer)][drop=T]
+   wd<-strsplit(outfile,'/')[[1]]
    
    for(i in 1:length(cells)) {
    conds<-subset(tot,(grepl(cells[i],tot[,2])))
    ficond=paste(cells[i])
+   if(grepl('/data/',outfile)) ficond<-paste('/data/',ficond,sep="")
+   
    write.table(rada[1,],ficond,sep=",",append=F,col.names=FALSE, row.names = F);
    write.table(conds,ficond,sep=",",append=TRUE,col.names=FALSE, row.names = F);
    }
