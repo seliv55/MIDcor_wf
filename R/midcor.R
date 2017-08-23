@@ -70,7 +70,8 @@ row2col<-function(res,metss,tot,isoname){
      while(!grepl("C0",metss[i,isoname])) {i=i+1;}
       for(k in 1:(res[[2]]+1)) {newcol[i]<-res[[1]][j,k]*100.; i=i+1; }
               }
-           newcol<-round(newcol,3);   if(length(newcol)<nrow(metss)) newcol<-c(newcol,0)
+           newcol<-round(newcol,3);
+              while(length(newcol)<nrow(metss)) newcol<-c(newcol,0)
         metss<-cbind(metss[-c(1),],newcol[-c(1)]); tot<-rbind(tot,metss)
     return(tot)}
 

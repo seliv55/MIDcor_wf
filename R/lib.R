@@ -142,7 +142,7 @@ convert<-function(rdat,iln){
             first<-0; m<-numeric(); 
             
       while(i<nrow(rdat)){
-      while(grepl("13C-1",rdat[i,coliso]) | rdat[i,coliso]=="") i<-i+1
+      while((i<nrow(rdat))&(grepl("13C-1",rdat[i,coliso]) | rdat[i,coliso]=="")) i<-i+1
       if(grepl("13C",rdat[i,coliso])){    k<-1
        while(as.integer(strsplit(rdat[i,coliso],"13C")[[1]][2]) >= 0) {
         m[k]=as.numeric(as.character(rdat[i,coldis])); i<-i+1; if(!grepl("13C",rdat[i,coliso])) break; k<-k+1;}
