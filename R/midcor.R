@@ -5,6 +5,7 @@ correct<-function(chast,fn1,mdcor){
   id<-onemet[[1]]; mm<-onemet[[2]] # signal intensities for mass range for ALL inj
    iln<-onemet[[3]]; nmet<-onemet[[4]]; nC<-onemet[[5]];
   nfrg<-onemet[[6]]; nSi=onemet[[7]] # signal intensities for mass range for SUMMED inj
+  labmet<-onemet[[8]]
    nS<-0;
    numc=ncol(mm);  nmass=nfrg+1; if(numc==nmass) {mm<-cbind(mm,mm[,numc]); numc=ncol(mm);}
     nln<-length(id); mdful<-mm
@@ -19,7 +20,7 @@ correct<-function(chast,fn1,mdcor){
 
 # correction factor
      corr<-numeric(nmass);
-     for(i in 1:nln) {if(grepl("nat",id[i])||grepl("NAT",id[i])||grepl("com",id[i])||grepl("COLD",id[i])||grepl("Cold",id[i])) break;}
+     for(i in 1:nln) {if(nchar(labmet[i])<5) { print(paste(id[i], labmet[i]," len=",nchar(labmet[i]))); break;}}
        corr<-mm[i,1:nmass]-mmteor[1,1:nmass]    # correction factor
        
  if(md=="va") { for(ii in 1:9) {

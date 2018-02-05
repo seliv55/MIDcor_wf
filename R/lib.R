@@ -132,12 +132,12 @@ convert<-function(rdat,iln){
   for(i in 1:ncol(rdat)){if(grepl("signal intens",rdat[1,i])) {coldis=i} # column of signal intensity
                else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of metabolite name
          if (grepl("isotopolog",rdat[1,i])) {coliso=i;}
-         if (grepl("labelled pos",rdat[1,i])) colab=i
+         if (grepl("labelled pos",rdat[1,i])) {colab=i;}
          }
          met<-rdat[iln,colmet];
          frag<-rdat[iln,colfrg];
         
-           i<-iln+1;  id<-character();
+           i<-iln+1;  id<-character(); labmet<-character();
            rdat[,coliso]<-as.character(rdat[,coliso])
             first<-0; m<-numeric(); 
             
@@ -147,9 +147,9 @@ convert<-function(rdat,iln){
        while(as.integer(strsplit(rdat[i,coliso],"13C")[[1]][2]) >= 0) {
         m[k]=as.numeric(as.character(rdat[i,coldis])); i<-i+1; if(!grepl("13C",rdat[i,coliso])) break; k<-k+1;}
                            first<-first+1;
-    if(first==1) { lm<-length(m); mm<-matrix(nrow=1,ncol=lm); mm[1,]<-m; id<-c(id,as.character(rdat[i-3,colid]))}
-                           else {mm<-rbind(mm,m);id<-c(id,as.character(rdat[i-3,colid]))}
+    if(first==1) { lm<-length(m); mm<-matrix(nrow=1,ncol=lm); mm[1,]<-m; id<-c(id,as.character(rdat[i-3,colid])); labmet<-c(labmet,as.character(rdat[i-3,colab]));}
+                           else {mm<-rbind(mm,m);id<-c(id,as.character(rdat[i-3,colid])); labmet<-c(labmet,as.character(rdat[i-3,colab]));}
                             }
       }
-           return(list(id,mm,i,colmet,nCder,nCfrg,nSi))
+           return(list(id,mm,i,colmet,nCder,nCfrg,nSi,labmet))
 }
