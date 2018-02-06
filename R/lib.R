@@ -82,14 +82,14 @@ ginfo<-function(rawdat,ln){ifor<-0
   for(i in 1:ncol(rawdat)){if(grepl("formula derivatized",rawdat[1,i])) {ifor=i;} # column of formula
               else {if(grepl("atomic pos",rawdat[1,i])) {colfrg=i;}} #  column of studied fragment
                            }
-       a=strsplit(as.character(rawdat[ln,ifor]),"C")[[1]]; # C atoms in derivate
-       b<-strsplit(a[2],"H")[[1]];
-       nCder<-as.numeric(b[1]);
-       c<-strsplit(b[2],"Si")[[1]];
+       a<-as.character(rawdat[ln,ifor]) 
+       pC<-regexpr("C",a); # C atoms in derivate
+       pH<-regexpr("H",a)
+       nCder<-as.numeric(substr(a,pC+1,pH-1));
        nSi<-0; nS<-0
-       if(length(c)>1) {nSi<-as.numeric(substr(c[2],1,1))
-         if(nchar(c[2])>1) {d<-strsplit(c[2],"S")[[1]]; nS<-as.numeric(substr(d[2],1,1));}
-       }
+       pSi<-regexpr("Si",a); if(pSi>0) nSi<-as.numeric(substr(a,pSi+2,pSi+2))
+       pS<-gregexpr("S",a)[[1]]; if(length(pS)>1) {
+          if(pS[1]!=pSi) nS<-as.numeric(substr(a,pS[1]+1,pS[1]+1)) else nS<-as.numeric(substr(a,pS[2]+1,pS[2]+1))}
              
        a=strsplit(as.character(rawdat[ln,colfrg]),"C")[[1]]; # C atoms in the fragment
        nCfrg=as.numeric(a[3])-as.numeric(strsplit(a[2],"-")[[1]][1])+1;
