@@ -82,16 +82,18 @@ ginfo<-function(rawdat,ln){ifor<-0
   for(i in 1:ncol(rawdat)){if(grepl("formula derivatized",rawdat[1,i])) {ifor=i;} # column of formula
               else {if(grepl("atomic pos",rawdat[1,i])) {colfrg=i;}} #  column of studied fragment
                            }
-       a=strsplit(as.character(rawdat[ln,ifor]),"C")[[1]][2]; # C atoms in derivate
-       nCder=as.numeric(strsplit(a,"H")[[1]][1]);
-
-       a=strsplit(as.character(rawdat[ln,ifor]),"Si")[[1]]; # Si atoms in derivate
-       nSi<-0
-       if(length(a)>1) nSi<-as.numeric(a[2])
-       
+       a=strsplit(as.character(rawdat[ln,ifor]),"C")[[1]]; # C atoms in derivate
+       b<-strsplit(a[2],"H")[[1]];
+       nCder<-as.numeric(b[1]);
+       c<-strsplit(b[2],"Si")[[1]];
+       nSi<-0; nS<-0
+       if(length(c)>1) {nSi<-as.numeric(substr(c[2],1,1))
+         if(nchar(c[2])>1) {d<-strsplit(c[2],"S")[[1]]; nS<-as.numeric(substr(d[2],1,1));}
+       }
+             
        a=strsplit(as.character(rawdat[ln,colfrg]),"C")[[1]]; # C atoms in the fragment
        nCfrg=as.numeric(a[3])-as.numeric(strsplit(a[2],"-")[[1]][1])+1;
-       return (list(nCder,nCfrg,nSi,colfrg))  }
+       return (list(nCder,nCfrg,nSi,nS,colfrg))  }
        
 #convert<-function(rdat,iln){
 #        colid=1; a=ginfo(rdat,iln);colmet=0;
@@ -128,7 +130,7 @@ ginfo<-function(rawdat,ln){ifor<-0
 #}       
 convert<-function(rdat,iln){
         colid=1; a=ginfo(rdat,iln);colmet=0;
-         nCder=a[[1]]; nCfrg=a[[2]]; nSi=a[[3]]; colfrg=a[[4]];
+         nCder=a[[1]]; nCfrg=a[[2]]; nSi=a[[3]]; nS=a[[4]]; colfrg=a[[5]];
   for(i in 1:ncol(rdat)){if(grepl("signal intens",rdat[1,i])) {coldis=i} # column of signal intensity
                else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of metabolite name
          if (grepl("isotopolog",rdat[1,i])) {coliso=i;}
@@ -151,5 +153,5 @@ convert<-function(rdat,iln){
                            else {mm<-rbind(mm,m);id<-c(id,as.character(rdat[i-3,colid])); labmet<-c(labmet,as.character(rdat[i-3,colab]));}
                             }
       }
-           return(list(id,mm,i,colmet,nCder,nCfrg,nSi,labmet))
+           return(list(id,mm,i,colmet,nCder,nCfrg,nSi,nS,labmet))
 }

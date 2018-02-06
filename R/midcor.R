@@ -4,9 +4,8 @@ correct<-function(chast,fn1,mdcor){
   onemet<-convert(chast,2); #onemet=c("CDF file","spectra all inj","line#","nmet","nC","nfrg","spectra summed inj","id sum")
   id<-onemet[[1]]; mm<-onemet[[2]] # signal intensities for mass range for ALL inj
    iln<-onemet[[3]]; nmet<-onemet[[4]]; nC<-onemet[[5]];
-  nfrg<-onemet[[6]]; nSi=onemet[[7]] # signal intensities for mass range for SUMMED inj
-  labmet<-onemet[[8]]
-   nS<-0;
+  nfrg<-onemet[[6]]; nSi=onemet[[7]];  nS<-onemet[[8]]
+  labmet<-onemet[[9]]
    numc=ncol(mm);  nmass=nfrg+1; if(numc==nmass) {mm<-cbind(mm,mm[,numc]); numc=ncol(mm);}
     nln<-length(id); mdful<-mm
 
