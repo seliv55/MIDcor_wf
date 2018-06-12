@@ -68,7 +68,8 @@ Version: 1.0
        
     install() 
        
-    library(midcor) ```
+    library(midcor)
+```
 
 - 2) alternatively, read directly the necessary functions:
   

@@ -62,7 +62,7 @@ write("*** All samples fully corrected **",fn1,append=T)
          return(list(id,fr,nfrg))
 }
 
-run_midcor<-function(infile="../readCDF/tmp/ramidout.csv", outfile="midcorout.csv",mode="con"){
+run_midcor<-function(infile="../readCDF/RaMID/ramidout.csv", outfile="midcorout.csv",mode="con"){
   fn1<-paste(infile,"_c",sep="");	
   write("",fn1);
   write("",outfile);
