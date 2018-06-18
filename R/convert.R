@@ -85,6 +85,13 @@ msdlist<-function(trati) { nln<-length(trati)
  isoform<-function(isofi='smprow'){
         cntn<-readLines(isofi)
         rowtrac<-grep('TRAC',cntn)
+        rowtrac<-c(rowtrac,length(cntn)+1)
+    for(itr in 1:(length(rowtrac)-1))
+      if(nchar(cntn[rowtrac[itr]])>15){
+     trspl<- strsplit(cntn[rowtrac[itr]],' ')
+      a<-cntn[rowtrac[itr]:rowtrac[itr+1]]
+      rowcel<- grep('CELL',a)
+     }
         
 # basic data:  
   fnam<-strsplit(a[1],' ')[[1]] # metabolite(file) name
