@@ -88,34 +88,36 @@ msdlist<-function(trati) { nln<-length(trati)
         rowtrac<-c(rowtrac,length(cntn)+1)
     for(itr in 1:(length(rowtrac)-1))
       if(nchar(cntn[rowtrac[itr]])>15){
-     trspl<- strsplit(cntn[rowtrac[itr]],' ')
-      a<-cntn[rowtrac[itr]:rowtrac[itr+1]]
-      rowcel<- grep('CELL',a)
+       atr<-cntn[rowtrac[itr]:(rowtrac[itr+1]-1)]
+       trspl<- strsplit(atr[1],' ')[[1]]
+       rowcel<- grep('CELL',atr)
+       rowcel<- c(rowcel,length(atr)+1)
+      for(icel in 1:(length(rowcel)-1)){
+        acel<- atr[rowcel[icel]:(rowcel[icel+1]-1)]
+        celspl<- strsplit(acel[1],' ')[[1]]
+         fi<-paste(celspl[2],trspl[2],sep='')
+         write("",fi);
+         rowname<- grep('name',acel)
+         rowname<- c(rowname,length(acel)+1)
+       for(ina in 1:(length(rowname)-1)){
+          aname<- acel[rowname[ina]:(rowname[ina+1]-1)]
+          naspl<- strsplit(aname[1],' ')[[1]]
+          write(naspl[2],fi,append=T);
+          rowti<- grep('t=',aname)
+          rowti<- c(rowti,length(aname)+1)
+         for(iti in 1:(length(rowti)-1)){
+           ati<- aname[rowti[iti]:(rowti[iti+1]-1)]
+          write(ati[1],fi,append=T);
+           tispl<- strsplit(ati,',')
+           dis<- matrix(nrow=length(ati)-1,ncol=length(tispl[[2]])-1)
+           for(i in 1:nrow(dis)) dis[i,1:ncol(dis)]<-as.numeric(tispl[[i+1]][2:(ncol(dis)+1)])
+           mdis<- apply(dis,2,mean)
+           sdis<- apply(dis,2,sd)
+          write.table(round(t(mdis),3),fi,append=T, col.names = F, row.names = F);
+          write.table(round(t(sdis),3),fi,append=T, col.names = F, row.names = F);
+         }
+       }
+      }
      }
         
-# basic data:  
-  fnam<-strsplit(a[1],' ')[[1]] # metabolite(file) name
-  tinc<-strsplit(a[2],' ')[[1]] # incubation times
-  trac<-strsplit(a[3],' ')[[1]] # tracer used
-   trr<-trac[marca]; metm<-paste(c(tinc),collapse=" ")
-    tmp4<-paste(c('tracer',a[marca+2]),collapse=" ")
-   
- for(met in fnam[2:length(fnam)]){
-   a<-readLines(paste(dor,strsplit(met,',')[[1]][1],'_c',sep=''))
-   beg<-grepl(' corrected',a)
-   suba<-a[beg[length(beg)]:length(a)]
-     tr<-vybor(suba,trr) #select tracer
-  if(length(tr)>0){
-  metm<-c(metm,paste("name:",met));
-   for(tii in tinc[2:length(tinc)]){
-      tm<-paste(tii,'h',sep="")
-      ttr<-vybor(tr,tm) #select incubation time
-  if(length(ttr)>0){
-  a<-msdlist(ttr)
-        tmp2<-paste(c("t=",tii,"mean:",a[1][[1]],sum(a[1][[1]])),collapse=" ")
-        tmp3<-paste(c("sd:",a[2][[1]]),collapse=" ")
-        metm<-c(metm,tmp2,tmp3)
-  }   }  } }
-        metm<-c(metm,tmp4)
-  write(metm,paste(dor,"mark",marca,sep=""))
-   return (metm)}
+}
