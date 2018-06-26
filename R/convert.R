@@ -1,5 +1,6 @@
 
 run_convert<-function(infile="midcorout.csv",outfile='smprow'){
+# converts Metabolights exchange format into that convenient for visual check
   write("",outfile);
   rada<-read.table(infile, sep=",");   # read experimental data
   tit<-data.frame(lapply(rada[1,], as.character), stringsAsFactors=FALSE)
@@ -78,32 +79,41 @@ msdlist<-function(trati) { nln<-length(trati)
         sdv<-round(apply(mdis,2,sd))
  return(list(mval,sdv))}
  
- vybor<-function(spis,obr){
- 	lspis<-grepl(obr,spis)
- return(spis[lspis]) }
+ getim<-function(star="cntn",pat="t= "){
+  roti<-grep(pat,cntn)
+  a<-star[roti]
+  aa<-sub(pat,'',a)
+  aaa<-'0';
+  for(i in aa) if(!(i %in% aaa)) aaa<-c(aaa,i)
+  return()
+ }
  
  isoform<-function(isofi='smprow'){
         cntn<-readLines(isofi)
-        rowtrac<-grep('TRAC',cntn)
+        rowti<-grep('t= ',cntn)
+        a<- sub('t= ','',cntn[rowti])
+        b<-paste(sort.int(unique(c('0',a))),collapse=' ')
+        inti<- paste('time(h):',b,'-1',collapse=' ')
+        rowtrac<-grep('TRAC',cntn)  #select samples of the same tracer
         rowtrac<-c(rowtrac,length(cntn)+1)
     for(itr in 1:(length(rowtrac)-1))
       if(nchar(cntn[rowtrac[itr]])>15){
        atr<-cntn[rowtrac[itr]:(rowtrac[itr+1]-1)]
        trspl<- strsplit(atr[1],' ')[[1]]
-       rowcel<- grep('CELL',atr)
+       rowcel<- grep('CELL',atr)  #select samples of the same cell type
        rowcel<- c(rowcel,length(atr)+1)
       for(icel in 1:(length(rowcel)-1)){
         acel<- atr[rowcel[icel]:(rowcel[icel+1]-1)]
         celspl<- strsplit(acel[1],' ')[[1]]
          fi<-paste(celspl[2],trspl[2],sep='')
-         write("",fi);
-         rowname<- grep('name',acel)
+          write(inti,fi);
+         rowname<- grep('name',acel)  #select metabolite
          rowname<- c(rowname,length(acel)+1)
        for(ina in 1:(length(rowname)-1)){
           aname<- acel[rowname[ina]:(rowname[ina+1]-1)]
           naspl<- strsplit(aname[1],' ')[[1]]
           write(naspl[2],fi,append=T);
-          rowti<- grep('t=',aname)
+          rowti<- grep('t=',aname)  #select time
           rowti<- c(rowti,length(aname)+1)
          for(iti in 1:(length(rowti)-1)){
            ati<- aname[rowti[iti]:(rowti[iti+1]-1)]
@@ -115,9 +125,10 @@ msdlist<-function(trati) { nln<-length(trati)
            sdis<- apply(dis,2,sd)
           write.table(round(t(mdis),3),fi,append=T, col.names = F, row.names = F);
           write.table(round(t(sdis),3),fi,append=T, col.names = F, row.names = F);
+           }
          }
+         write(atr[1],fi,append=T);
        }
-      }
      }
         
 }
