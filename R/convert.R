@@ -6,7 +6,7 @@ run_convert<-function(infile="midcorout.csv",outfile='smprow'){
   tit<-data.frame(lapply(rada[1,], as.character), stringsAsFactors=FALSE)
   rada<- droplevels(rada[-1,])
   print(tit)
-        abund<- grep("concentration", tit)  # calculated fractions of isotopologs
+        abund<- grep("abundance", tit)[2]  # calculated fractions of isotopologs
         colmet<- grep("Metab", tit)  # column of metabolite name
         colfrg<- grep("atomic", tit)  # carbon positions in the fragment
         coltrac<- grep("tracer", tit)  # carbon positions in the fragment
@@ -36,7 +36,6 @@ run_convert<-function(infile="midcorout.csv",outfile='smprow'){
         met<- subset(cll,mlev==cll[,colmet])
         levfr<- levels(met[,colfrg][drop=T]) 
     for(frlev in levfr){ # select fragment
-        tot<-data.frame();
         metfr<- subset(met,frlev==met[,colfrg])
        pCf<-gregexpr("C",frlev)[[1]]; # C-position in formula
        iCb<- as.numeric(substr(frlev,pCf[1]+1,pCf[1]+1))-1
@@ -45,13 +44,14 @@ run_convert<-function(infile="midcorout.csv",outfile='smprow'){
         write(paste(paste("name:",mlev),iCb,iCe,sep=','),outfile,append=T);
         levtim<- levels(metfr[,coltim][drop=T])
     for(tilev in levtim){ # select fragment
+        tot<-data.frame();
         metfrt<- subset(metfr,tilev==metfr[,coltim])
         if(nchar(tilev)>0) write(paste("t=",tilev),outfile,append=T) else
          write("t= 0",outfile,append=T)
         levsmp<- levels(metfrt[,1][drop=T])
      for(smplev in levsmp){ # select sample
         df<- data.frame()
-        smp<- subset(metfrt,(smplev==metfrt[,1])&(!grepl('-1',metfr[,abund-1])))
+        smp<- subset(metfrt,(smplev==metfrt[,1])&(!grepl('-1',metfrt[,abund-1])))
         dis<- as.numeric(as.character(smp[,abund]))
         df[1,1]<- smp[1,1];
         for(idis in 1:(nCfrg+1)) df[1,1+idis]<- round(dis[idis],4)

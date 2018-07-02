@@ -113,6 +113,8 @@ run_midcor<-function(infile="../readCDF/RaMID/ramidout.csv", outfile="midcorout.
    write.table(rada[1,],ficond,sep=",",append=F,col.names=FALSE, row.names = F);
    write.table(conds,ficond,sep=",",append=TRUE,col.names=FALSE, row.names = F);
    }
-    
+   fiso='smprow'
+    run_convert(infile=outfile,outfile=fiso)
+    isoform(isofi=fiso)
    return(tot) }
 
