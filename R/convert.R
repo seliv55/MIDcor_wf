@@ -92,7 +92,8 @@ msdlist<-function(trati) { nln<-length(trati)
         cntn<-readLines(isofi)
         rowti<-grep('t= ',cntn)
         a<- sub('t= ','',cntn[rowti])
-        b<-paste(sort.int(unique(c('0',a))),collapse=' ')
+        a<- sub('h','',a)
+        b<-paste(sort.int(as.numeric(unique(c('0',a)))),collapse=' ')
         inti<- paste('time(h):',b,'-1',collapse=' ')
         rowtrac<-grep('trac',cntn)  #select samples of the same tracer
         rowtrac<-c(rowtrac,length(cntn)+1)
@@ -118,7 +119,7 @@ msdlist<-function(trati) { nln<-length(trati)
           rowti<- c(rowti,length(aname)+1)
          for(iti in 1:(length(rowti)-1)){
            ati<- aname[rowti[iti]:(rowti[iti+1]-1)]
-          write(ati[1],fi,append=T);
+          write(sub('h','',ati[1]),fi,append=T);
            tispl<- strsplit(ati,',')
            dis<- matrix(nrow=length(ati)-1,ncol=length(tispl[[2]])-1)
            for(i in 1:nrow(dis)) dis[i,1:ncol(dis)]<-0.01*as.numeric(tispl[[i+1]][2:(ncol(dis)+1)])
