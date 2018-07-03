@@ -79,6 +79,8 @@ Version: 1.0
  source("R/midcor.R") 
 
  source("R/lib.R")
+ 
+ source("R/convert.R")
 ```
 
 ## Usage Instructions

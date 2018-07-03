@@ -124,6 +124,7 @@ msdlist<-function(trati) { nln<-length(trati)
            for(i in 1:nrow(dis)) dis[i,1:ncol(dis)]<-0.01*as.numeric(tispl[[i+1]][2:(ncol(dis)+1)])
            mdis<- apply(dis,2,mean)
            sdis<- apply(dis,2,sd)
+           sdis[is.na(sdis)]<-0
           write("mean:",fi,append=T);
           write.table(round(t(mdis),3),fi,append=T, col.names = F, row.names = F);
           write("sd:",fi,append=T);
