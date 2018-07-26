@@ -18,18 +18,17 @@ correct<-function(chast,fn1,mdcor){
 
 # correction factor
      corr<-numeric(nmass);
-     for(i in 1:nln) if(nchar(labmet[i])<5) {
-       print(paste(id[i], labmet[i]," len=",nchar(labmet[i]))); break;}
-     corr<-mm[i,1:nmass]-mmteor[1,1:nmass]    # correction factor
+     for(i in 1:nln) {if(nchar(labmet[i])<5) { print(paste(id[i], labmet[i]," len=",nchar(labmet[i]))); break;}}
+       corr<-mm[i,1:nmass]-mmteor[1,1:nmass]    # correction factor
        
  if(md=="va") { for(ii in 1:9) {
 # correction for EACH INJECTION
-  tmp<-mdful;
-  for(j in 1:nln) for(k in 1:(nfrg+1)) for(i in 1:(nmass+1-k)) tmp[j,i+k-1]<-tmp[j,i+k-1]-corr[i]*(fr[j,k]);
-  fr<-mdistr(nfrg,tmp,mmteor,nln);
+    tmp<-mdful;
+    for(j in 1:nln)  for(k in 1:(nfrg+1))  for(i in 1:(nmass+1-k)) tmp[j,i+k-1]<-tmp[j,i+k-1]-corr[i]*(fr[j,k]);
+      fr<-mdistr(nfrg,tmp,mmteor,nln);
         }}
   if(md=="co") {     # ALL INJECTIONS:
-     for(j in 1:nln)  mdful[j,1:nmass]<-mdful[j,1:nmass]-corr;
+                 for(j in 1:nln)  mdful[j,1:nmass]<-mdful[j,1:nmass]-corr;
      fr<-100*round(mdistr(nfrg,mdful,mmteor,nln),5)
                }
 write("*** All samples fully corrected **",fn1,append=T)
@@ -114,8 +113,6 @@ run_midcor<-function(infile="../readCDF/RaMID/ramidout.csv", outfile="midcorout.
    write.table(rada[1,],ficond,sep=",",append=F,col.names=FALSE, row.names = F);
    write.table(conds,ficond,sep=",",append=TRUE,col.names=FALSE, row.names = F);
    }
-   fiso='smprow'
-    run_convert(infile=outfile,outfile=fiso)
-    isoform(isofi=fiso)
+    
    return(tot) }
 
