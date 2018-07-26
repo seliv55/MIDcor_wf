@@ -134,5 +134,3 @@ Using the atomic composition of the metabolites, derivatized for gas chromatogra
 ## Publications
 - [1] Selivanov VA, Benito A, Miranda A, Aguilar E, Polat IH, Centelles JJ, Jayaraman A, Lee PW, Marin S, Cascante M. MIDcor, an R-program for deciphering mass interferences in mass spectra of metabolites enriched in stable isotopes. BMC Bioinformatics. 2017, 18:88.
 
-
-

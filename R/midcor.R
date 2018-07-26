@@ -1,15 +1,14 @@
-  
 correct<-function(chast,fn1,mdcor){
-  md<-substr(mdcor,1,2);
-  onemet<-convert(chast,2); #onemet=c("CDF file","spectra all inj","line#","nmet","nC","nfrg","spectra summed inj","id sum")
-  id<-onemet[[1]]; mm<-onemet[[2]] # signal intensities for mass range for ALL inj
-   iln<-onemet[[3]]; nmet<-onemet[[4]]; nC<-onemet[[5]];
-  nfrg<-onemet[[6]]; nSi=onemet[[7]];  nS<-onemet[[8]]
-  labmet<-onemet[[9]]
-   numc=ncol(mm);  nmass=nfrg+1; if(numc==nmass) {mm<-cbind(mm,mm[,numc]); numc=ncol(mm);}
+    md<-substr(mdcor,1,2)
+  onemet<-convert(chast) 
+  id<-onemet[[1]]; mm<-onemet[[2]] # matrix of signal intensities
+   nC<-onemet[[3]];  nfrg<-onemet[[4]]; nSi=onemet[[5]];  nS<-onemet[[6]]
+  labmet<-onemet[[7]]
+   numc<- ncol(mm);  nmass<- nfrg+1; 
+   if(numc==nmass) {mm<-cbind(mm,mm[,numc]); numc<- ncol(mm);}
     nln<-length(id); mdful<-mm
 
-      mmteor<-mtr(nfrg,nmass,nC,nSi,nS) # theoretic distribution
+      mmteor<-mtr(nfrg,numc,nC,nSi,nS) # theoretic distribution
          
 # mass fractions
    fr<-mdistr(nfrg,mm,mmteor,nln) # write mass fractions without correction:
@@ -30,10 +29,10 @@ correct<-function(chast,fn1,mdcor){
         }}
   if(md=="co") {     # ALL INJECTIONS:
                  for(j in 1:nln)  mdful[j,1:nmass]<-mdful[j,1:nmass]-corr;
-     fr<-mdistr(nfrg,mdful,mmteor,nln)
+     fr<-100*round(mdistr(nfrg,mdful,mmteor,nln),5)
                }
 write("*** All samples fully corrected **",fn1,append=T)
-  write.table(cbind(id,round(fr,5)),fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F)
+  write.table(cbind(id,round(fr,2)),fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F)
         write("\n",fn1,append=TRUE);
 #
      i<-1 # Statistics for SUMMED INJECTIONS
@@ -60,55 +59,48 @@ write("*** All samples fully corrected **",fn1,append=T)
 #    write.table(cbind(idsum,round(frsum,5)),fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F);
  write.table(t(c("*Correction: ",round(corr,5))),file=fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F);
         write("\n",file=fn1,append=TRUE);
-         return(list(fr,nfrg,iln))
+         return(list(id,fr,nfrg))
 }
 
-row2col<-function(res,metss,tot,isoname){
-  nstrok<-nrow(res[[1]])
-  i<-1; newcol<-numeric()
-    for(j in 1:nstrok){
-     while(!grepl("C0",metss[i,isoname])) {i=i+1;}
-      for(k in 1:(res[[2]]+1)) {newcol[i]<-res[[1]][j,k]*100.; i=i+1; }
-              }
-           newcol<-round(newcol,3);
-              while(length(newcol)<nrow(metss)) newcol<-c(newcol,0)
-        metss<-cbind(metss[-c(1),],newcol[-c(1)]); tot<-rbind(tot,metss)
-    return(tot)}
-
-
-run_midcor<-function(infile="../RaMID/ramidout.csv", outfile="midcorout.csv",mode="con"){
-  fn<-file.path(infile);
-  fn1<-paste(fn,"_c",sep="");
+run_midcor<-function(infile="../readCDF/RaMID/ramidout.csv", outfile="midcorout.csv",mode="con"){
+  fn1<-paste(infile,"_c",sep="");	
   write("",fn1);
   write("",outfile);
-  rada<-read.table(fn, sep=",");   # read experimental data
-  for(i in 1:ncol(rada)) {
-        if(grepl("tracer molecule",rada[1,i])) {coltrac<-i}  # column of tracer used
-        if(grepl("cell",rada[1,i])) {colcel<-i}  # column of cell type(conditions)
-        if(grepl("time",rada[1,i])) {coltime<-i}  # column of incubation time
-         if(grepl("Metab",rada[1,i])) {colmet<-i}  # column of metabolite name
-        if(grepl("atomic pos",rada[1,i])) {colfrg<-i}  # carbon positions in the fragment
-        if(grepl("signal intensity",rada[1,i])) {inten<-i}  #  column of signal intensity
-        if(grepl("isotopol",rada[1,i])) {isoname<-i; } # isotopolog symbols
-        if(grepl("abundance",rada[1,i])) {abund<-i}  # calculated fractions of isotopologs
-  }
-   Mtb<-levels(rada[,colmet])
-   Mtb<-Mtb[!grepl("e name",Mtb)][drop=T]
-tot<-data.frame(); # group the data for each metabolite and correct for natiral abundance
+  rada<-read.table(infile, sep=",");   # read experimental data
+  tit<-data.frame(lapply(rada[1,], as.character), stringsAsFactors=FALSE)
+        abund<- grep("abundance", tit)[2]  # calculated fractions of isotopologs
+        colmet<- grep("Metab", tit)  # column of metabolite name
+        colfrg<- grep("atomic", tit)  # carbon positions in the fragment
+        tot<-data.frame(); #for rada corrected
+    Mtb<-levels(rada[,colmet])
+    Mtb<-Mtb[!grepl("name",Mtb)][drop=T]
    for(i in 1:length(Mtb)){
         write(paste("----",Mtb[i]," ---"),fn1,append=TRUE)
-   metfr<-rbind(rada[1,],subset(rada,Mtb[i]==rada[,colmet]))
+        met<- subset(rada,Mtb[i]==rada[,colmet]) # select metabolite
+        levmet<- levels(met[,colfrg][drop=T]) # fragments of selected met
+    for(ilev in 1:length(levmet)){
+   metfr<- subset(met,levmet[ilev]==met[,colfrg])
+   metfr<-rbind(tit,metfr)
     res<-correct(metfr,fn1,mode)
-    tot<-row2col(res,metfr,tot,isoname)
-   }
-    tot<-tot[-(abund)]
-    tot[,inten]<-as.numeric(levels(tot[,inten])[tot[,inten]])
+    id<- res[[1]]
+    mcor<- res[[2]]
+    for(j in 1:length(id)){
+    smetfr<- subset(metfr,metfr[,1]==id[j])
+    mcol<- c(0,mcor[j,])
+    mcol<- mcol[-length(mcol)]
+    racor<- cbind(smetfr[-abund],mcol[1:nrow(smetfr)])
+    tot<- rbind(tot,racor)
+          }
+         }
+        }
    write.table(rada[1,],outfile,sep=",",append=F,col.names=FALSE, row.names = F);
    write.table(tot,outfile,sep=",",append=TRUE,col.names=FALSE, row.names = F);
    
+        colcel<- grep("cell", tit)  # column of cell type(conditions)
    cells<-levels(rada[,colcel])
    cells<-cells[!grepl("cells",cells)][drop=T]
    
+        coltrac<- grep("tracer", tit)  # column of tracer used
    tracer<-levels(rada[,coltrac])
    tracer<-tracer[grepl("C13",tracer)][drop=T]
    wd<-strsplit(outfile,'/')[[1]]

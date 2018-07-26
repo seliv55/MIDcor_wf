@@ -78,11 +78,8 @@ mdistr<-function(nreal,msd,mm,nln){ #label incorporation
         for(i in 2:(nucol-1)) {fr[,nucol]<- fr[,nucol]+fr[,i];}
       return(fr) }
 
-ginfo<-function(rawdat,ln){ifor<-0
-  for(i in 1:ncol(rawdat)){if(grepl("formula derivatized",rawdat[1,i])) {ifor=i;} # column of formula
-              else {if(grepl("atomic pos",rawdat[1,i])) {colfrg=i;}} #  column of studied fragment
-                           }
-       a<-as.character(rawdat[ln,ifor]) 
+ginfo<-function(rawdat,ifor,colfrg){
+       a<-as.character(rawdat[2,ifor]) 
        pC<-regexpr("C",a)  # C-position in formula
        pH<-regexpr("H",a)  # H-position in formula
        nCder<-as.numeric(substr(a,pC+1,pH-1)); # C atoms in derivate
@@ -91,70 +88,49 @@ ginfo<-function(rawdat,ln){ifor<-0
        pS<-gregexpr("S",a)[[1]]; if(length(pS)>1) { # S atoms in derivate
           if(pS[1]!=pSi) nS<-as.numeric(substr(a,pS[1]+1,pS[1]+1)) else nS<-as.numeric(substr(a,pS[2]+1,pS[2]+1))}
              
-       a<-as.character(rawdat[ln,colfrg])
+       a<-as.character(rawdat[2,colfrg])
        pCf<-gregexpr("C",a)[[1]]; # C-position in formula
-       iCb=as.numeric(substr(a,pCf[1]+1,pCf[1]+1))
-       iCe=as.numeric(substr(a,pCf[2]+1,pCf[2]+1))
-       nCfrg=iCe-iCb+1
-       return (list(nCder,nCfrg,nSi,nS,colfrg))  }
-       
-#convert<-function(rdat,iln){
-#        colid=1; a=ginfo(rdat,iln);colmet=0;
-#         nCder=a[[1]]; nCfrg=a[[2]]; nSi=a[[3]]; colfrg=a[[4]];
-#  for(i in 1:ncol(rdat)){if(grepl("signal intens",rdat[1,i])) {coldis=i} # column of signal intensity
-#               else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of metabolite name
-#         if (grepl("isotopolog",rdat[1,i])) {coliso=i;}
-#         if (grepl("labelled pos",rdat[1,i])) colab=i
-#         }
-#         met<-rdat[iln,colmet];
-#         frag<-rdat[iln,colfrg];
-#         m<-numeric();     k<-1;
-#           i<-iln+1;  id<-as.character(rdat[i,colid]);
-#       while(!grepl("C-1",rdat[i,coliso])) {# distribution of intensities for 1st injection
-#         if(frag==rdat[i,colfrg]){
-#               m[k]=as.numeric(as.character(rdat[i,coldis])); i=i+1; k=k+1}
-#         else i=i+1 }
-#       lm<-length(m)
-#       mm<-matrix(nrow=1,ncol=lm); mmm=mm # mm - for all inj; mmm - for summed inj
-#        mm[1,]=m; m1=m                    # m - for all inj; m1 - for summed inj 
-#       while(met==rdat[i,colmet]){  #  metabolite cycle
-#        id<-c(id,as.character(rdat[i,colid]))
-#            m<-numeric(lm); k<-1
-#            i=i+1
-#       while(!grepl("C-1",rdat[i,coliso])) {  #  replicate cycle
-#          if(frag==rdat[i,colfrg]){
-#             m[k]=as.numeric(as.character(rdat[i,coldis]));
-#             i=i+1;  k=k+1 }
-#           else { i=i+1 }
-#       if(i>nrow(rdat)) { break}}
-#       if(lm==length(m)) {mm=rbind(mm,m)};
-#       if(i>nrow(rdat)) {break}}
-#       return(list(id,mm,i,colmet,nCder,nCfrg,nSi))
-#}       
-convert<-function(rdat,iln){
-        colid=1; a=ginfo(rdat,iln);colmet=0;
-         nCder=a[[1]]; nCfrg=a[[2]]; nSi=a[[3]]; nS=a[[4]]; colfrg=a[[5]];
-  for(i in 1:ncol(rdat)){if(grepl("signal intens",rdat[1,i])) {coldis=i} # column of signal intensity
-               else {if(grepl("Metab",rdat[1,i])) colmet=i;} #  column of metabolite name
-         if (grepl("isotopolog",rdat[1,i])) {coliso=i;}
-         if (grepl("labelled pos",rdat[1,i])) {colab=i;}
-         }
-         met<-rdat[iln,colmet];
-         frag<-rdat[iln,colfrg];
+       iCb<- as.numeric(substr(a,pCf[1]+1,pCf[1]+1))
+       iCe<- as.numeric(substr(a,pCf[2]+1,pCf[2]+1))
+       nCfrg<- iCe-iCb+1
+return (list(nCder,nCfrg,nSi,nS))  }
+
+convert<-function(rdat){
+        colid<- 1;
+  tit<-data.frame(lapply(rdat[1,], as.character), stringsAsFactors=FALSE)
+        coldis<- grep("signal", tit)  # column of signal intensity
+        colmet<- grep("Metab", tit)  # column of metabolite name
+        coliso<- grep("isotopolog", tit)  # column of mass iso
+        ifor<- grep("formula", tit)  # column of derivates
+        colfrg<- grep("atomic", tit)  # column of fragments
+        colab<- grep("labelled", tit)  # column of tracer
+   a<- ginfo(rdat,ifor,colfrg);
+         nCder<- a[[1]]; nCfrg<- a[[2]]; nSi<- a[[3]]; nS<- a[[4]]; 
+  
+         met<-rdat[2,colmet]
+         frag<-rdat[2,colfrg]
         
-           i<-iln+1;  id<-character(); labmet<-character();
            rdat[,coliso]<-as.character(rdat[,coliso])
-            first<-0; m<-numeric(); 
+           i<-2; id<-character(); first<-0;
+            m00<-0; m<-numeric();  labmet<-character();
             
       while(i<nrow(rdat)){
-      while((i<nrow(rdat))&(grepl("13C-1",rdat[i,coliso]) | rdat[i,coliso]=="")) i<-i+1
-      if(grepl("13C",rdat[i,coliso])){    k<-1
+      if((i<nrow(rdat))&(grepl("-1",rdat[i,coliso]))) {
+      m00=as.numeric(as.character(rdat[i,coldis]))
+       i<-i+1;    k<-1 }
        while(as.integer(strsplit(rdat[i,coliso],"13C")[[1]][2]) >= 0) {
-        m[k]=as.numeric(as.character(rdat[i,coldis])); i<-i+1; if(!grepl("13C",rdat[i,coliso])) break; k<-k+1;}
-                           first<-first+1;
-    if(first==1) { lm<-length(m); mm<-matrix(nrow=1,ncol=lm); mm[1,]<-m; id<-c(id,as.character(rdat[i-3,colid])); labmet<-c(labmet,as.character(rdat[i-3,colab]));}
-                           else {mm<-rbind(mm,m);id<-c(id,as.character(rdat[i-3,colid])); labmet<-c(labmet,as.character(rdat[i-3,colab]));}
-                            }
+        m[k]=as.numeric(as.character(rdat[i,coldis]));
+         i<-i+1; if(!grepl("13C",rdat[i,coliso])) break; k<-k+1 }
+          f<- m00/m[1]
+          if(f<0.2) { for(eim in 1:(length(m)-1)) m[eim]<- (1+f)*m[eim]+f*m[eim+1]
+             m<- m/sum(m);
+             first<-first+1;
+    if(first==1) { mm<-matrix(nrow=1,ncol=length(m)); mm[1,]<-m }
+    else mm<-rbind(mm,m[1:ncol(mm)]);
+      id<-c(id,as.character(rdat[i-3,colid]));
+       labmet<-c(labmet,as.character(rdat[i-3,colab])) }
+           else print(paste(rdat[3,colmet],' m00=',m00,' m1=',m[1]))
+      while((i<nrow(rdat))&(!grepl("13C",rdat[i,coliso]))) i<-i+1
       }
-           return(list(id,mm,i,colmet,nCder,nCfrg,nSi,nS,labmet))
+           return(list(id,mm,nCder,nCfrg,nSi,nS,labmet))
 }
