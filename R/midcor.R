@@ -4,14 +4,14 @@ correct<-function(chast,fn1,mdcor){
   id<-onemet[[1]]; mm<-onemet[[2]] # matrix of signal intensities
    nC<-onemet[[3]];  nfrg<-onemet[[4]]; nSi=onemet[[5]];  nS<-onemet[[6]]
   labmet<-onemet[[7]]
-   numc<- ncol(mm);  nmass<- nfrg+1; 
+   numc<- ncol(mm);  nmass<- min(nfrg+1,numc); 
    if(numc==nmass) {mm<-cbind(mm,mm[,numc]); numc<- ncol(mm);}
     nln<-length(id); mdful<-mm
 
-      mmteor<-mtr(nfrg,numc,nC,nSi,nS) # theoretic distribution
+      mmteor<-mtr(nmass,numc,nC,nSi,nS) # theoretic distribution
          
 # mass fractions
-   fr<-mdistr(nfrg,mm,mmteor,nln) # write mass fractions without correction:
+   fr<-mdistr(nmass,mm,mmteor,nln) # write mass fractions without correction:
  write("*** MID for each injection, corrected only for natural 13C, 29,30Si, 33,34S ***",fn1,append=T)
   write.table(cbind(id,round(fr,5)),fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F);
         write("\n",fn1,append=TRUE);
@@ -24,12 +24,12 @@ correct<-function(chast,fn1,mdcor){
  if(md=="va") { for(ii in 1:9) {
 # correction for EACH INJECTION
     tmp<-mdful;
-    for(j in 1:nln)  for(k in 1:(nfrg+1))  for(i in 1:(nmass+1-k)) tmp[j,i+k-1]<-tmp[j,i+k-1]-corr[i]*(fr[j,k]);
-      fr<-mdistr(nfrg,tmp,mmteor,nln);
+    for(j in 1:nln)  for(k in 1:(nmass+1))  for(i in 1:(nmass+1-k)) tmp[j,i+k-1]<-tmp[j,i+k-1]-corr[i]*(fr[j,k]);
+      fr<-mdistr(nmass,tmp,mmteor,nln);
         }}
   if(md=="co") {     # ALL INJECTIONS:
                  for(j in 1:nln)  mdful[j,1:nmass]<-mdful[j,1:nmass]-corr;
-     fr<-100*round(mdistr(nfrg,mdful,mmteor,nln),5)
+     fr<-100*round(mdistr(nmass,mdful,mmteor,nln),5)
                }
 write("*** All samples fully corrected **",fn1,append=T)
   write.table(cbind(id,round(fr,2)),fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F)
@@ -59,10 +59,10 @@ write("*** All samples fully corrected **",fn1,append=T)
 #    write.table(cbind(idsum,round(frsum,5)),fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F);
  write.table(t(c("*Correction: ",round(corr,5))),file=fn1,quote=FALSE,append=TRUE,col.names=FALSE, row.names = F);
         write("\n",file=fn1,append=TRUE);
-         return(list(id,fr,nfrg))
+         return(list(id,fr,nmass))
 }
 
-run_midcor<-function(infile="../readCDF/RaMID/ramidout.csv", outfile="midcorout.csv",mode="con"){
+run_midcor<-function(infile="cdf2midout.csv", outfile="midcorout.csv",mode="con"){
   fn1<-paste(infile,"_c",sep="");	
   write("",fn1);
   write("",outfile);
@@ -74,7 +74,7 @@ run_midcor<-function(infile="../readCDF/RaMID/ramidout.csv", outfile="midcorout.
         tot<-data.frame(); #for rada corrected
     Mtb<-levels(rada[,colmet])
     Mtb<-Mtb[!grepl("name",Mtb)][drop=T]
-   for(i in 1:length(Mtb)){
+   for(i in 1:length(Mtb)){ print(paste(i,Mtb[i]));
         write(paste("----",Mtb[i]," ---"),fn1,append=TRUE)
         met<- subset(rada,Mtb[i]==rada[,colmet]) # select metabolite
         levmet<- levels(met[,colfrg][drop=T]) # fragments of selected met
