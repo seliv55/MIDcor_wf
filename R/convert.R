@@ -88,7 +88,7 @@ msdlist<-function(trati) { nln<-length(trati)
   return()
  }
  
- isoform<-function(isofi='smprow'){
+ isoform<-function(isofi='smprow',outdir=''){
         cntn<-readLines(isofi)
         rowti<-grep('t= ',cntn)
         a<- sub('t= ','',cntn[rowti])
@@ -107,7 +107,7 @@ msdlist<-function(trati) { nln<-length(trati)
       for(icel in 1:(length(rowcel)-1)){
         acel<- atr[rowcel[icel]:(rowcel[icel+1]-1)]
         celspl<- strsplit(acel[1],' ')[[1]]
-         fi<-paste(celspl[2],'-',trspl,sep='')
+         fi<-paste(outdir,celspl[2],'-',trspl,sep='')
           write(inti,fi);
          rowname<- grep('name',acel)  #select metabolite
          rowname<- c(rowname,length(acel)+1)

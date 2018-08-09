@@ -95,6 +95,7 @@ run_midcor<-function(infile="cdf2midout.csv", outfile="midcorout.csv",mode="con"
         }
    write.table(rada[1,],outfile,sep=",",append=F,col.names=FALSE, row.names = F);
    write.table(tot,outfile,sep=",",append=TRUE,col.names=FALSE, row.names = F);
+   run_convert(infile=outfile,outfile='smprow')
    
         colcel<- grep("cell", tit)  # column of cell type(conditions)
    cells<-levels(rada[,colcel])
