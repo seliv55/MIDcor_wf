@@ -108,7 +108,7 @@ Here to create the docker image, the same github repository "https://github.com/
 ```
 Then run the main program:
 ```sh
- run_midcor(infile=<input file>, outfile<output file>, mode=<"con" or "var">)
+ run_midcor(infile=<input file>, outfile=<output file>, mode=<"con" or "var">)
 ```
  
 ## two examples provided
