@@ -18,7 +18,7 @@ correct<-function(chast,fn1,mdcor){
 
 # correction factor
      corr<-numeric(nmass);
-     for(i in 1:nln) {if(nchar(labmet[i])<5) { print(paste(id[i], labmet[i]," len=",nchar(labmet[i]))); break;}}
+     for(i in 1:nln) {if(!grepl('1',labmet[i])) { print(paste(id[i], labmet[i]," len=",nchar(labmet[i]))); break;}}
        corr<-mm[i,1:nmass]-mmteor[1,1:nmass]    # correction factor
        
  if(md=="va") { for(ii in 1:9) {
