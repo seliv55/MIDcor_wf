@@ -61,12 +61,12 @@ write("*** All samples fully corrected **",fn1,append=T)
         write("\n",file=fn1,append=TRUE);
          return(list(id,fr,nmass))
 }
-
 run_midcor<-function(infile="cdf2midout.csv", outfile="midcorout.csv",mode="con"){
   fn1<-paste(infile,"_c",sep="");	
   write("",fn1);
   write("",outfile);
-  rada<-read.table(infile, sep=",");   # read experimental data
+  rada<-read.table(infile, sep=",")
+  if(ncol(rada)<2) rada<-read.table(infile, sep=" ")   # read experimental data
   tit<-data.frame(lapply(rada[1,], as.character), stringsAsFactors=FALSE)
         abund<- grep("abundance", tit)[2]  # calculated fractions of isotopologs
         colmet<- grep("Metab", tit)  # column of metabolite name
